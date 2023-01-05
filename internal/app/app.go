@@ -11,8 +11,8 @@ import (
 
 func testCreateUser(pc *pgxpool.Pool) {
 	ctx := context.Background()
-	userRepository := repositories.NewUserRepository(pc)
-	userId, err := userRepository.CreateUser(ctx, "user 123")
+	userRepository := repositories.NewPostgresUserRepository(pc)
+	userId, err := userRepository.CreateUser(ctx, "user 125")
 	if err != nil {
 		panic(err)
 	}
