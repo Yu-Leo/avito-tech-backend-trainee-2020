@@ -29,9 +29,9 @@ CREATE TABLE users_chats
 
 CREATE TABLE messages
 (
-    id         BIGSERIAL PRIMARY KEY UNIQUE,
-    user_id    BIGSERIAL REFERENCES users (id) NOT NULL,
-    chat_id    BIGSERIAL REFERENCES chats (id) NOT NULL,
-    text       TEXT,
-    created_at TIMESTAMP                       NOT NULL DEFAULT NOW()
+    id           BIGSERIAL PRIMARY KEY UNIQUE,
+    user_id      BIGSERIAL REFERENCES users (id) NOT NULL,
+    chat_id      BIGSERIAL REFERENCES chats (id) NOT NULL,
+    message_text TEXT,
+    created_at   TIMESTAMP                       NOT NULL DEFAULT NOW()
 );
