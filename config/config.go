@@ -7,7 +7,23 @@ import (
 )
 
 type Config struct {
+	App     AppConfig     `yaml:"app"`
+	HTTP    HTTPConfig    `yaml:"http"`
+	Logger  LoggerConfig  `yaml:"logger"`
 	Storage StorageConfig `yaml:"storage"`
+}
+
+type AppConfig struct {
+	Name    string `yaml:"name"`
+	Version string `yaml:"version"`
+}
+
+type HTTPConfig struct {
+	Port string `yaml:"port"`
+}
+
+type LoggerConfig struct {
+	Level string `yaml:"log_level"`
 }
 
 type StorageConfig struct {
@@ -19,18 +35,21 @@ type StorageConfig struct {
 }
 
 var instance *Config
+var err error
 
 var once sync.Once
 
-func GetConfig() *Config {
+func GetConfig() (*Config, error) {
 	once.Do(func() {
 		instance = &Config{}
-		err := cleanenv.ReadConfig("config.yaml", instance)
+		err = cleanenv.ReadConfig("./config/config.yaml", instance)
 		if err != nil {
 			help, _ := cleanenv.GetDescription(instance, nil)
 			log.Println(help)
-			log.Fatalln(err)
 		}
 	})
-	return instance
+	if instance == nil {
+		return nil, err
+	}
+	return instance, nil
 }
