@@ -6,17 +6,20 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/usecases"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func testCreateUser(pc *pgxpool.Pool) {
-	ctx := context.Background()
 	userRepository := repositories.NewPostgresUserRepository(pc)
+	userUserCase := usecases.NewUserUserCase(userRepository)
+
 	userDTO := entities.UserDTO{
-		Username: "user 1",
+		Username: "user 2",
 	}
-	userId, err := userRepository.CreateUser(ctx, userDTO)
+
+	userId, err := userUserCase.CreateUser(userDTO)
 	if err != nil {
 		panic(err)
 	}
