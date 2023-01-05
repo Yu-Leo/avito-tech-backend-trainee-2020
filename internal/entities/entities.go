@@ -8,6 +8,10 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
+type UserDTO struct {
+	Username string `json:"username"`
+}
+
 type Chat struct {
 	Id        int       `json:"id"`
 	Name      string    `json:"name"`
