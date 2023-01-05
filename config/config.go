@@ -8,7 +8,7 @@ import (
 
 type Config struct {
 	App     AppConfig     `yaml:"app"`
-	HTTP    HTTPConfig    `yaml:"http"`
+	Server  ServerConfig  `yaml:"server"`
 	Logger  LoggerConfig  `yaml:"logger"`
 	Storage StorageConfig `yaml:"storage"`
 }
@@ -18,8 +18,9 @@ type AppConfig struct {
 	Version string `yaml:"version"`
 }
 
-type HTTPConfig struct {
-	Port string `yaml:"port"`
+type ServerConfig struct {
+	Host string `env-required:"true" yaml:"host"`
+	Port int    `env-required:"true" yaml:"port"`
 }
 
 type LoggerConfig struct {
@@ -27,14 +28,15 @@ type LoggerConfig struct {
 }
 
 type StorageConfig struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Database string `yaml:"database"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Host     string `env-required:"true" yaml:"host"`
+	Port     int    `env-required:"true" yaml:"port"`
+	Database string `env-required:"true" yaml:"database"`
+	Username string `env-required:"true" yaml:"username"`
+	Password string `env-required:"true" yaml:"password"`
 }
 
 var instance *Config
+
 var err error
 
 var once sync.Once

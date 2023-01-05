@@ -2,7 +2,7 @@ app:
   name: 'avito-tech-backend-trainee-2020'
   version: '1.0.0'
 
-http1:
+server:
   host: 'localhost'
   port: 8080
 
