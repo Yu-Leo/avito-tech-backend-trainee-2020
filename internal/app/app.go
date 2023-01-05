@@ -4,25 +4,19 @@ import (
 	"context"
 	"fmt"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func testCreateUser(pc *pgxpool.Pool) {
-	q := `
-		INSERT INTO users (username)
-		VALUES ($1)
-		RETURNING users.id;
-			`
-	var userID int
 	ctx := context.Background()
-	err := pc.QueryRow(ctx, q, "username 9").Scan(&userID)
-
+	userRepository := repositories.NewUserRepository(pc)
+	userId, err := userRepository.CreateUser(ctx, "user 123")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("New user id:", userID)
-
+	fmt.Println("New user id", userId)
 }
 
 func Run(cfg *config.Config) {
