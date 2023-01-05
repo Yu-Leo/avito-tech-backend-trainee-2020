@@ -1,0 +1,17 @@
+app:
+  name: 'avito-tech-backend-trainee-2020'
+  version: '1.0.0'
+
+http1:
+  host: 'localhost'
+  port: 8080
+
+logger:
+  log_level: 'debug'
+
+storage:
+  host: 'localhost'
+  port: 5432
+  database: 'postgres'
+  username: 'postgres'
+  password: 'postgres'
