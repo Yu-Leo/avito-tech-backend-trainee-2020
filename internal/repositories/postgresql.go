@@ -2,7 +2,11 @@ package repositories
 
 import (
 	"context"
+	"errors"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
+	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -24,7 +28,11 @@ func (ur *userRepository) CreateUser(ctx context.Context, user entities.UserDTO)
 		`
 	err = ur.postgresClient.QueryRow(ctx, q, user.Username).Scan(&userID)
 	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
+			return 0, apperror.UsernameAlreadyExists
+		}
 		return 0, err
 	}
-	return userID, err
+	return userID, nil
 }
