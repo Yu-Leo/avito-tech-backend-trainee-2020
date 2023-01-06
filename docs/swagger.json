@@ -1,0 +1,71 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Avito-tech backend trainee task 2020",
+        "contact": {
+            "name": "Lev Yuvensky",
+            "email": "levayu22@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/users": {
+            "post": {
+                "description": "Create a new user with username",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create new user",
+                "operationId": "create",
+                "parameters": [
+                    {
+                        "description": "username",
+                        "name": "username",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.UserDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.userId"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entities.UserDTO": {
+            "type": "object",
+            "required": [
+                "username"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.userId": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

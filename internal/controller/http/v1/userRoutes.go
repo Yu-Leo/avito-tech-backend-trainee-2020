@@ -32,6 +32,19 @@ func newUserRoutes(handler *gin.RouterGroup, userUseCase *usecases.UserUseCase, 
 	}
 }
 
+type userId struct {
+	Id int `json:"userId"`
+}
+
+// @Summary     Create new user
+// @Description Create a new user with username
+// @ID          create
+// @Tags  	    user
+// @Accept      json
+// @Produce     json
+// @Param		username body entities.UserDTO true "username"
+// @Success     200 {object} userId
+// @Router      /users [post]
 func (r *userRoutes) createUser(c *gin.Context) {
 	userDTO := entities.UserDTO{}
 
@@ -54,8 +67,5 @@ func (r *userRoutes) createUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated,
-		struct {
-			Id int `json:"userId"`
-		}{userid})
+	c.JSON(http.StatusCreated, userId{userid})
 }
