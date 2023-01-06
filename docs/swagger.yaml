@@ -1,0 +1,46 @@
+basePath: /api/v1
+definitions:
+  entities.UserDTO:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
+  v1.userId:
+    properties:
+      userId:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: levayu22@gmail.com
+    name: Lev Yuvensky
+  title: Avito-tech backend trainee task 2020
+  version: "1.0"
+paths:
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with username
+      operationId: create
+      parameters:
+      - description: username
+        in: body
+        name: username
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.userId'
+      summary: Create new user
+      tags:
+      - user
+swagger: "2.0"
