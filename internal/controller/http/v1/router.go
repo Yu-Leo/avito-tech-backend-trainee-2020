@@ -6,10 +6,6 @@ import (
 )
 
 func NewRouter(ginEngine *gin.Engine, userUseCase *usecases.UserUseCase) {
-	// Options
-	ginEngine.Use(gin.Logger())
-	ginEngine.Use(gin.Recovery())
-
 	// Routers
 	router := ginEngine.Group("/v1")
 	{

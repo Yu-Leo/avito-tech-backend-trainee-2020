@@ -22,7 +22,7 @@ func Run(cfg *config.Config) {
 
 	userUserCase := usecases.NewUserUserCase(userRepository)
 
-	ginEngine := gin.New()
+	ginEngine := gin.Default()
 
 	v1.NewRouter(ginEngine, userUserCase)
 
