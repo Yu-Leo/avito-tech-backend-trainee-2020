@@ -2,13 +2,11 @@ package postgresql
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"log"
 	"time"
 )
 
@@ -23,33 +21,27 @@ type Client interface {
 
 func NewClient(ctx context.Context, maxAttempts int, sc config.StorageConfig) (pool *pgxpool.Pool, err error) {
 	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%d/%s", sc.Username, sc.Password, sc.Host, sc.Port, sc.Database)
-	err = doWithTries(func() error {
-		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-		defer cancel()
 
-		pool, err = pgxpool.New(ctx, dsn)
-		if err != nil {
-			return err
+	for i := 0; i < maxAttempts; i++ {
+		pool, err = tryToConnectPostgres(ctx, dsn)
+		if err == nil {
+			//fmt.Println("No error")
+			return pool, nil
 		}
-
-		return nil
-	}, maxAttempts, 5*time.Second)
-
-	if err != nil {
-		log.Fatal("error do with tries postgresql")
+		time.Sleep(1 * time.Second)
 	}
-
-	return pool, nil
+	return nil, err
 }
 
-func doWithTries(fn func() error, attempts int, delay time.Duration) (err error) {
-	for attempts > 0 {
-		if err = fn(); err != nil {
-			time.Sleep(delay)
-			attempts--
-			continue
-		}
-		return nil
+func tryToConnectPostgres(ctx context.Context, dsn string) (pool *pgxpool.Pool, err error) {
+	ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
+	defer cancel()
+
+	pool, err = pgxpool.New(context.Background(), dsn)
+	if err != nil {
+		//fmt.Println("Error 2", err)
+		return nil, err
 	}
-	return errors.New("error")
+	//fmt.Println("No error 2", pool)
+	return pool, nil
 }

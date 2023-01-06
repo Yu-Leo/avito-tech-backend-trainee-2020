@@ -6,20 +6,25 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/usecases"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type userRoutes struct {
 	userUseCase *usecases.UserUseCase
+	logger      logger.Interface
 }
 
 type errorJSON struct {
 	Message string `json:"message"`
 }
 
-func newUserRoutes(handler *gin.RouterGroup, userUseCase *usecases.UserUseCase) {
-	uR := &userRoutes{userUseCase}
+func newUserRoutes(handler *gin.RouterGroup, userUseCase *usecases.UserUseCase, logger logger.Interface) {
+	uR := &userRoutes{
+		userUseCase: userUseCase,
+		logger:      logger,
+	}
 
 	userHandlerGroup := handler.Group("/users")
 	{
@@ -44,7 +49,8 @@ func (r *userRoutes) createUser(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusInternalServerError, errorJSON{err.Error()})
+		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		r.logger.Error(err.Error())
 		return
 	}
 
