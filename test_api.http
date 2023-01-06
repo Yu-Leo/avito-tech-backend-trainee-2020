@@ -2,5 +2,5 @@ POST http://localhost:8080/v1/users
 Content-Type: application/json
 
 {
-  "username": "ivan 123"
+  "username": "ivan 45"
 }
