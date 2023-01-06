@@ -9,7 +9,7 @@ type User struct {
 }
 
 type UserDTO struct {
-	Username string `json:"username"`
+	Username string `json:"username" binding:"required"`
 }
 
 type Chat struct {
