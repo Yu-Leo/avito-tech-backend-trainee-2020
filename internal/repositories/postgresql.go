@@ -5,18 +5,18 @@ import (
 	"errors"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgerrcode"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type userRepository struct {
-	postgresClient *pgx.Conn
+	postgresConnection postgresql.Connection
 }
 
-func NewPostgresUserRepository(pc *pgx.Conn) UserRepository {
+func NewPostgresUserRepository(pc postgresql.Connection) UserRepository {
 	return &userRepository{
-		postgresClient: pc,
+		postgresConnection: pc,
 	}
 }
 
@@ -26,7 +26,7 @@ INSERT INTO users (username)
 VALUES ($1)
 RETURNING users.id;
 		`
-	err = ur.postgresClient.QueryRow(ctx, q, user.Username).Scan(&userID)
+	err = ur.postgresConnection.QueryRow(ctx, q, user.Username).Scan(&userID)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
@@ -38,12 +38,12 @@ RETURNING users.id;
 }
 
 type chatRepository struct {
-	postgresClient *pgx.Conn
+	postgresConnection postgresql.Connection
 }
 
-func NewPostgresChatRepository(pc *pgx.Conn) ChatRepository {
+func NewPostgresChatRepository(pc postgresql.Connection) ChatRepository {
 	return &chatRepository{
-		postgresClient: pc,
+		postgresConnection: pc,
 	}
 }
 
@@ -53,7 +53,7 @@ INSERT INTO chats (name)
 VALUES ($1)
 RETURNING chats.id;
 		`
-	err = cr.postgresClient.QueryRow(ctx, q1, chat.Name).Scan(&chatID)
+	err = cr.postgresConnection.QueryRow(ctx, q1, chat.Name).Scan(&chatID)
 	if err != nil {
 		return 0, err
 	}
@@ -62,7 +62,7 @@ INSERT INTO users_chats (user_id, chat_id)
 VALUES ($1, $2);
 		`
 	for _, userID := range chat.Users {
-		_, err = cr.postgresClient.Query(ctx, q2, userID, chatID)
+		_, err = cr.postgresConnection.Query(ctx, q2, userID, chatID)
 		if err != nil {
 			var pgErr *pgconn.PgError
 			if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
