@@ -6,7 +6,6 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"time"
 )
 
@@ -19,29 +18,17 @@ type Client interface {
 	BeginTxFunc(ctx context.Context, txOptions pgx.TxOptions, f func(pgx.Tx) error) error
 }
 
-func NewClient(ctx context.Context, maxAttempts int, sc config.StorageConfig) (pool *pgxpool.Pool, err error) {
+func NewClient(ctx context.Context, maxAttempts int, sc config.StorageConfig) (conn *pgx.Conn, err error) {
+	const timeDelta = 2 * time.Second
+
 	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%d/%s", sc.Username, sc.Password, sc.Host, sc.Port, sc.Database)
 
 	for i := 0; i < maxAttempts; i++ {
-		pool, err = tryToConnectPostgres(ctx, dsn)
+		time.Sleep(timeDelta)
+		conn, err = pgx.Connect(ctx, dsn)
 		if err == nil {
-			//fmt.Println("No error")
-			return pool, nil
+			return conn, err
 		}
-		time.Sleep(1 * time.Second)
 	}
 	return nil, err
-}
-
-func tryToConnectPostgres(ctx context.Context, dsn string) (pool *pgxpool.Pool, err error) {
-	ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
-	defer cancel()
-
-	pool, err = pgxpool.New(context.Background(), dsn)
-	if err != nil {
-		//fmt.Println("Error 2", err)
-		return nil, err
-	}
-	//fmt.Println("No error 2", pool)
-	return pool, nil
 }
