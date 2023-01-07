@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/controller/http/v1"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
@@ -10,39 +11,57 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5"
+	"os"
+	"os/signal"
+	"syscall"
 )
+
+func closePostgresConnection(ctx context.Context, postgresConnection postgresql.Connection, l logger.Interface) {
+	err := postgresConnection.Close(ctx)
+	if err == nil {
+		l.Info("Close Postgres connection")
+	} else {
+		l.Error(err.Error())
+	}
+}
 
 func Run(cfg *config.Config) {
 	l := logger.NewLogger(cfg.Logger.Level)
 
 	l.Info("Run application")
 
-	postgresClient, err := postgresql.NewClient(context.TODO(), 2, cfg.Storage)
+	postgresConnection, err := postgresql.NewConnection(context.TODO(), 2, cfg.Storage)
 	if err != nil {
 		l.Fatal(err.Error())
 	}
 	l.Info("Open Postgres connection")
 
-	defer func(postgresClient *pgx.Conn, ctx context.Context) {
-		err := postgresClient.Close(ctx)
-		if err == nil {
-			l.Info("Close Postgres connection")
-		} else {
-			l.Error(err.Error())
-		}
-	}(postgresClient, context.Background())
+	defer closePostgresConnection(context.Background(), postgresConnection, l)
 
-	userRepository := repositories.NewPostgresUserRepository(postgresClient)
-	chatRepository := repositories.NewPostgresChatRepository(postgresClient)
+	userRepository := repositories.NewPostgresUserRepository(postgresConnection)
+	chatRepository := repositories.NewPostgresChatRepository(postgresConnection)
 
 	userUserCase := usecases.NewUserUserCase(userRepository)
 	chatUserCase := usecases.NewChatUserCase(chatRepository)
 
-	ginEngine := gin.Default()
-
+	ginEngine := gin.New()
 	v1.NewRouter(ginEngine, l, userUserCase, chatUserCase)
+	httpServer := httpserver.New(ginEngine, httpserver.Port(cfg.Server.Port))
 
-	httpserver.New(ginEngine, httpserver.Port(cfg.Server.Port))
-	ginEngine.Run()
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
+	select {
+	case s := <-interrupt:
+		l.Info(fmt.Sprintf("Catch the %s signal", s.String()))
+	case err = <-httpServer.Notify():
+		l.Error(fmt.Sprintf("HTTPServer notify error: %e", err))
+	}
+
+	err = httpServer.Shutdown()
+	if err == nil {
+		l.Info("Shutdown HTTPServer")
+	} else {
+		l.Error(fmt.Sprintf("HTTPServer shutdown error: %e", err))
+	}
 }
