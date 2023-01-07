@@ -14,7 +14,7 @@ CREATE TABLE users
 CREATE TABLE chats
 (
     id         BIGSERIAL PRIMARY KEY UNIQUE,
-    name       VARCHAR(30) UNIQUE NOT NULL,
+    name       VARCHAR(30) NOT NULL,
     created_at TIMESTAMP          NOT NULL DEFAULT NOW()
 );
 

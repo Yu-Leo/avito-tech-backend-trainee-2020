@@ -4,6 +4,10 @@ var (
 	UsernameAlreadyExists = NewAppError(
 		"The user with the specified username already exists",
 		"")
+
+	UserIDNotFound = NewAppError(
+		"The user with the specified id not found",
+		"")
 )
 
 type AppError struct {

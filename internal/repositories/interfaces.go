@@ -6,5 +6,9 @@ import (
 )
 
 type UserRepository interface {
-	CreateUser(context.Context, entities.UserDTO) (int, error)
+	Create(context.Context, entities.UserDTO) (int, error)
+}
+
+type ChatRepository interface {
+	Create(context.Context, entities.ChatDTO) (int, error)
 }
