@@ -48,6 +48,14 @@ func NewPostgresChatRepository(pc postgresql.Connection) ChatRepository {
 }
 
 func (cr *chatRepository) Create(ctx context.Context, chat entities.ChatDTO) (chatID int, err error) {
+
+	tx, err := cr.postgresConnection.Begin(context.Background())
+	if err != nil {
+		return 0, err
+	}
+
+	defer tx.Rollback(context.Background())
+
 	q1 := `
 INSERT INTO chats (name)
 VALUES ($1)
@@ -64,13 +72,19 @@ VALUES ($1, $2);
 	for _, userID := range chat.Users {
 		_, err = cr.postgresConnection.Query(ctx, q2, userID, chatID)
 		if err != nil {
-			var pgErr *pgconn.PgError
-			if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
-				return 0, apperror.UserIDNotFound
-
-			}
+			//var pgErr *pgconn.PgError
+			//if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
+			//	return 0, apperror.UserIDNotFound
+			//}
 			return 0, err
 		}
 	}
+
+	err = tx.Commit(context.Background())
+	if err != nil {
+		return 0, err
+	}
+
 	return chatID, nil
+
 }

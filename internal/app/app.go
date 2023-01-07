@@ -16,15 +16,6 @@ import (
 	"syscall"
 )
 
-func closePostgresConnection(ctx context.Context, postgresConnection postgresql.Connection, l logger.Interface) {
-	err := postgresConnection.Close(ctx)
-	if err == nil {
-		l.Info("Close Postgres connection")
-	} else {
-		l.Error(err.Error())
-	}
-}
-
 func Run(cfg *config.Config) {
 	l := logger.NewLogger(cfg.Logger.Level)
 
@@ -35,8 +26,6 @@ func Run(cfg *config.Config) {
 		l.Fatal(err.Error())
 	}
 	l.Info("Open Postgres connection")
-
-	defer closePostgresConnection(context.Background(), postgresConnection, l)
 
 	userRepository := repositories.NewPostgresUserRepository(postgresConnection)
 	chatRepository := repositories.NewPostgresChatRepository(postgresConnection)
