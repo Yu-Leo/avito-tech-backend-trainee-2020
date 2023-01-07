@@ -6,15 +6,15 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
 	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type userRepository struct {
-	postgresClient *pgxpool.Pool
+	postgresClient *pgx.Conn
 }
 
-func NewPostgresUserRepository(pc *pgxpool.Pool) UserRepository {
+func NewPostgresUserRepository(pc *pgx.Conn) UserRepository {
 	return &userRepository{
 		postgresClient: pc,
 	}
@@ -38,10 +38,10 @@ RETURNING users.id;
 }
 
 type chatRepository struct {
-	postgresClient *pgxpool.Pool
+	postgresClient *pgx.Conn
 }
 
-func NewPostgresChatRepository(pc *pgxpool.Pool) ChatRepository {
+func NewPostgresChatRepository(pc *pgx.Conn) ChatRepository {
 	return &chatRepository{
 		postgresClient: pc,
 	}

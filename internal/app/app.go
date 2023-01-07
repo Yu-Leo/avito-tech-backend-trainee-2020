@@ -10,6 +10,7 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5"
 )
 
 func Run(cfg *config.Config) {
@@ -17,14 +18,20 @@ func Run(cfg *config.Config) {
 
 	l.Info("Run application")
 
-	postgresClient, err := postgresql.NewClient(context.TODO(), 1, cfg.Storage)
+	postgresClient, err := postgresql.NewClient(context.TODO(), 2, cfg.Storage)
 	if err != nil {
 		l.Fatal(err.Error())
 	}
+	l.Info("Open Postgres connection")
 
-	l.Debug("Connected to postgres")
-
-	defer postgresClient.Close()
+	defer func(postgresClient *pgx.Conn, ctx context.Context) {
+		err := postgresClient.Close(ctx)
+		if err == nil {
+			l.Info("Close Postgres connection")
+		} else {
+			l.Error(err.Error())
+		}
+	}(postgresClient, context.Background())
 
 	userRepository := repositories.NewPostgresUserRepository(postgresClient)
 	chatRepository := repositories.NewPostgresChatRepository(postgresClient)
