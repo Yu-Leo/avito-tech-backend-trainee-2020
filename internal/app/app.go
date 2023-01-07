@@ -27,12 +27,14 @@ func Run(cfg *config.Config) {
 	defer postgresClient.Close()
 
 	userRepository := repositories.NewPostgresUserRepository(postgresClient)
+	chatRepository := repositories.NewPostgresChatRepository(postgresClient)
 
 	userUserCase := usecases.NewUserUserCase(userRepository)
+	chatUserCase := usecases.NewChatUserCase(chatRepository)
 
 	ginEngine := gin.Default()
 
-	v1.NewRouter(ginEngine, userUserCase, l)
+	v1.NewRouter(ginEngine, l, userUserCase, chatUserCase)
 
 	httpserver.New(ginEngine, httpserver.Port(cfg.Server.Port))
 	ginEngine.Run()

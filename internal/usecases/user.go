@@ -17,5 +17,5 @@ func NewUserUserCase(userRepository repositories.UserRepository) *UserUseCase {
 }
 
 func (u UserUseCase) CreateUser(user entities.UserDTO) (int, error) {
-	return u.repository.CreateUser(context.Background(), user)
+	return u.repository.Create(context.Background(), user)
 }

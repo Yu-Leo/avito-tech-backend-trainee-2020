@@ -28,7 +28,7 @@ func newUserRoutes(handler *gin.RouterGroup, userUseCase *usecases.UserUseCase, 
 
 	userHandlerGroup := handler.Group("/users")
 	{
-		userHandlerGroup.POST("", uR.createUser)
+		userHandlerGroup.POST("/add", uR.createUser)
 	}
 }
 
@@ -55,7 +55,7 @@ func (r *userRoutes) createUser(c *gin.Context) {
 	}
 	fmt.Println(userDTO)
 
-	userid, err := r.userUseCase.CreateUser(userDTO)
+	newUserId, err := r.userUseCase.CreateUser(userDTO)
 	if err != nil {
 		if errors.Is(err, apperror.UsernameAlreadyExists) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
@@ -67,5 +67,5 @@ func (r *userRoutes) createUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, userId{userid})
+	c.JSON(http.StatusCreated, userId{newUserId})
 }

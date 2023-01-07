@@ -10,7 +10,7 @@ logger:
   log_level: 'debug'
 
 storage:
-  host: 'postgres'
+  host: 'localhost'
   port: 5432
   database: 'postgres'
   username: 'postgres'

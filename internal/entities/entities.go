@@ -12,6 +12,11 @@ type UserDTO struct {
 	Username string `json:"username" binding:"required"`
 }
 
+type ChatDTO struct {
+	Name  string `json:"name"`
+	Users []int  `json:"users"`
+}
+
 type Chat struct {
 	Id        int       `json:"id"`
 	Name      string    `json:"name"`

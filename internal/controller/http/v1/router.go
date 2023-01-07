@@ -19,13 +19,16 @@ import (
 // @host      localhost:8080
 // @BasePath  /api/v1
 
-func NewRouter(ginEngine *gin.Engine, userUseCase *usecases.UserUseCase, logger logger.Interface) {
+func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
+	userUseCase *usecases.UserUseCase, chatUseCase *usecases.ChatUseCase) {
+
 	// Routers
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	router := ginEngine.Group("/v1")
 	{
 		newUserRoutes(router, userUseCase, logger)
+		newChatRoutes(router, chatUseCase, logger)
 	}
 
 }
