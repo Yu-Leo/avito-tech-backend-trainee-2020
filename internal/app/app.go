@@ -33,7 +33,7 @@ func Run(cfg *config.Config) {
 	userUserCase := usecases.NewUserUserCase(userRepository)
 	chatUserCase := usecases.NewChatUserCase(chatRepository)
 
-	ginEngine := gin.New()
+	ginEngine := gin.Default()
 	v1.NewRouter(ginEngine, l, userUserCase, chatUserCase)
 	httpServer := httpserver.New(ginEngine, httpserver.Port(cfg.Server.Port))
 
