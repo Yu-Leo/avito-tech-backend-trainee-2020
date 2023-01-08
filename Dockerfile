@@ -10,4 +10,4 @@ COPY . .
 RUN go build -o /usr/local/bin/ -v ./...
 RUN chmod a+x /usr/local/bin/app
 
-EXPOSE 8080
+EXPOSE 9000

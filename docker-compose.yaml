@@ -16,7 +16,7 @@ services:
   webapp:
     build: .
     ports:
-      - "8080:8080"
+      - "9000:9000"
     entrypoint: "/usr/local/bin/app"
     depends_on:
       - postgres
