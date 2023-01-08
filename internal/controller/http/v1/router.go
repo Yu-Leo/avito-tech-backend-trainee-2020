@@ -16,7 +16,7 @@ import (
 // @contact.name   Lev Yuvensky
 // @contact.email  levayu22@gmail.com
 
-// @host      127.0.0.1:8080
+// @host      127.0.0.1:9000
 // @BasePath  /
 
 func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
