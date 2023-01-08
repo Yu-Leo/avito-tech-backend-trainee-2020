@@ -1,17 +1,20 @@
 ###
-POST http://localhost:8080/v1/users/add
+POST http://127.0.0.1:8080/users/add
 Content-Type: application/json
 
 {
-  "username": "ivan 45"
+  "username": "ivan 452"
 }
 
 
 ###
-POST http://localhost:8080/v1/chats/add
+POST http://localhost:8080/chats/add
 Content-Type: application/json
 
 {
   "name": "Chat 1",
-  "users": [1, 2]
+  "users": [
+    1,
+    2
+  ]
 }

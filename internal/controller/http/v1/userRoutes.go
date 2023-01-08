@@ -2,7 +2,6 @@ package v1
 
 import (
 	"errors"
-	"fmt"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/usecases"
@@ -37,14 +36,15 @@ type userId struct {
 }
 
 // @Summary     Create new user
-// @Description Create a new user with username
-// @ID          create
+// @Description Create a new user with username.
+// @ID          createUser
 // @Tags  	    user
 // @Accept      json
 // @Produce     json
-// @Param		username body entities.UserDTO true "username"
 // @Success     200 {object} userId
-// @Router      /users [post]
+// @Failure	    400 {object} errorJSON
+// @Failure	    500 {object} errorJSON
+// @Router      /users/add [post]
 func (r *userRoutes) createUser(c *gin.Context) {
 	userDTO := entities.UserDTO{}
 
@@ -53,7 +53,6 @@ func (r *userRoutes) createUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
 		return
 	}
-	fmt.Println(userDTO)
 
 	newUserId, err := r.userUseCase.CreateUser(userDTO)
 	if err != nil {

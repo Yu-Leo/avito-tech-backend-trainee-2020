@@ -19,9 +19,45 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users": {
+        "/chats/add": {
             "post": {
-                "description": "Create a new user with username",
+                "description": "Create a new user with name and users.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chat"
+                ],
+                "summary": "Create new chat",
+                "operationId": "createChat",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.chatId"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.errorJSON"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.errorJSON"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/add": {
+            "post": {
+                "description": "Create a new user with username.",
                 "consumes": [
                     "application/json"
                 ],
@@ -32,23 +68,24 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "Create new user",
-                "operationId": "create",
-                "parameters": [
-                    {
-                        "description": "username",
-                        "name": "username",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/entities.UserDTO"
-                        }
-                    }
-                ],
+                "operationId": "createUser",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/v1.userId"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.errorJSON"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.errorJSON"
                         }
                     }
                 }
@@ -56,13 +93,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entities.UserDTO": {
+        "v1.chatId": {
             "type": "object",
-            "required": [
-                "username"
-            ],
             "properties": {
-                "username": {
+                "chatId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.errorJSON": {
+            "type": "object",
+            "properties": {
+                "message": {
                     "type": "string"
                 }
             }
@@ -81,8 +123,8 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
-	BasePath:         "/api/v1",
+	Host:             "127.0.0.1:8080",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Avito-tech backend trainee task 2020",
 	Description:      "",

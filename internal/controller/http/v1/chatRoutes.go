@@ -32,13 +32,15 @@ type chatId struct {
 }
 
 // @Summary     Create new chat
-// @Description Create a new user with name and users
-// @ID          create
+// @Description Create a new user with name and users.
+// @ID          createChat
 // @Tags  	    chat
 // @Accept      json
 // @Produce     json
 // @Success     200 {object} chatId
-// @Router      /chats [post]
+// @Failure	    400 {object} errorJSON
+// @Failure	    500 {object} errorJSON
+// @Router      /chats/add [post]
 func (r *chatRoutes) createChat(c *gin.Context) {
 	chatDTO := entities.ChatDTO{}
 

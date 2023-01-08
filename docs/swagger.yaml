@@ -1,18 +1,21 @@
-basePath: /api/v1
+basePath: /
 definitions:
-  entities.UserDTO:
+  v1.chatId:
     properties:
-      username:
+      chatId:
+        type: integer
+    type: object
+  v1.errorJSON:
+    properties:
+      message:
         type: string
-    required:
-    - username
     type: object
   v1.userId:
     properties:
       userId:
         type: integer
     type: object
-host: localhost:8080
+host: 127.0.0.1:8080
 info:
   contact:
     email: levayu22@gmail.com
@@ -20,19 +23,36 @@ info:
   title: Avito-tech backend trainee task 2020
   version: "1.0"
 paths:
-  /users:
+  /chats/add:
     post:
       consumes:
       - application/json
-      description: Create a new user with username
-      operationId: create
-      parameters:
-      - description: username
-        in: body
-        name: username
-        required: true
-        schema:
-          $ref: '#/definitions/entities.UserDTO'
+      description: Create a new user with name and users.
+      operationId: createChat
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.chatId'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.errorJSON'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.errorJSON'
+      summary: Create new chat
+      tags:
+      - chat
+  /users/add:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with username.
+      operationId: createUser
       produces:
       - application/json
       responses:
@@ -40,6 +60,14 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/v1.userId'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.errorJSON'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.errorJSON'
       summary: Create new user
       tags:
       - user
