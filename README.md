@@ -63,9 +63,9 @@ make stop
 - DBMS: **PostgreSQL**
 - Programming language: **Go (1.19.4)**
 - Frameworks and libraries:
-    - **(`gin`)[https://github.com/gin-gonic/gin]** - HTTP web framework
-    - **(`pgx`)[https://github.com/jackc/pgx]** - PostgreSQL driver and toolkit
-    - **(`swag`)[https://github.com/swaggo/swag]** - Automatically generate RESTful API documentation with Swagger 2.0
+    - [`gin`](https://github.com/gin-gonic/gin) - HTTP web framework
+    - [`pgx`](https://github.com/jackc/pgx) - PostgreSQL driver and toolkit
+    - [`swag`](https://github.com/swaggo/swag) - Automatically generate RESTful API documentation with Swagger 2.0
     - [ ] Other libs
 
 #### Tools
