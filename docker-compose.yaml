@@ -17,6 +17,8 @@ services:
     build: .
     ports:
       - "9000:9000"
+    environment:
+      - DB_HOST=postgres
     entrypoint: "/usr/local/bin/app"
     depends_on:
       - postgres

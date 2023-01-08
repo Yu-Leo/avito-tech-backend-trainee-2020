@@ -19,20 +19,20 @@ type AppConfig struct {
 }
 
 type ServerConfig struct {
-	Host string `env-required:"true" yaml:"host"`
-	Port int    `env-required:"true" yaml:"port"`
+	Host string `env-required:"true" yaml:"host" env:"APP_HOST"`
+	Port int    `env-required:"true" yaml:"port" env:"APP_PORT"`
 }
 
 type LoggerConfig struct {
-	Level string `yaml:"log_level"`
+	Level string `yaml:"log_level" env:"LOG_LEVEL" env-default:"info"`
 }
 
 type StorageConfig struct {
-	Host     string `env-required:"true" yaml:"host"`
-	Port     int    `env-required:"true" yaml:"port"`
-	Database string `env-required:"true" yaml:"database"`
-	Username string `env-required:"true" yaml:"username"`
-	Password string `env-required:"true" yaml:"password"`
+	Host     string `env-required:"true" yaml:"host" env:"DB_HOST"`
+	Port     int    `env-required:"true" yaml:"port" env:"DB_PORT"`
+	Database string `env-required:"true" yaml:"database" env:"DB_DATABASE"`
+	Username string `env-required:"true" yaml:"username" env:"DB_USER"`
+	Password string `env-required:"true" yaml:"password" env:"DB_PASSWORD"`
 }
 
 var instance *Config
