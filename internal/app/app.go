@@ -25,6 +25,11 @@ func Run(cfg *config.Config) {
 	if err != nil {
 		l.Fatal(err.Error())
 	}
+	defer func() {
+		postgresConnection.Release()
+		l.Info("Close Postgres connection")
+	}()
+
 	l.Info("Open Postgres connection")
 
 	userRepository := repositories.NewPostgresUserRepository(postgresConnection)
