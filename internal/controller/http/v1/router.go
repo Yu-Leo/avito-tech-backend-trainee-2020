@@ -16,8 +16,8 @@ import (
 // @contact.name   Lev Yuvensky
 // @contact.email  levayu22@gmail.com
 
-// @host      localhost:8080
-// @BasePath  /api/v1
+// @host      127.0.0.1:8080
+// @BasePath  /
 
 func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
 	userUseCase *usecases.UserUseCase, chatUseCase *usecases.ChatUseCase) {
@@ -25,7 +25,7 @@ func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
 	// Routers
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	router := ginEngine.Group("/v1")
+	router := ginEngine.Group("")
 	{
 		newUserRoutes(router, userUseCase, logger)
 		newChatRoutes(router, chatUseCase, logger)
