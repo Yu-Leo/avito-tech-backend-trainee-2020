@@ -14,7 +14,6 @@ Content-Type: application/json
 {
   "name": "Chat 1",
   "users": [
-    1,
-    2
+    1
   ]
 }
