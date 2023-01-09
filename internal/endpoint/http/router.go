@@ -1,7 +1,8 @@
-package v1
+package http
 
 import (
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/usecases"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoint/http/handler"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/service"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
@@ -20,15 +21,15 @@ import (
 // @BasePath  /
 
 func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
-	userUseCase *usecases.UserUseCase, chatUseCase *usecases.ChatUseCase) {
+	userUseCase *service.UserService, chatUseCase *service.ChatService) {
 
 	// Routers
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	router := ginEngine.Group("")
 	{
-		newUserRoutes(router, userUseCase, logger)
-		newChatRoutes(router, chatUseCase, logger)
+		handler.NewUserRoutes(router, userUseCase, logger)
+		handler.NewChatRoutes(router, chatUseCase, logger)
 	}
 
 }

@@ -1,21 +1,21 @@
-package v1
+package handler
 
 import (
 	"errors"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/usecases"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/service"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type chatRoutes struct {
-	chatUseCase *usecases.ChatUseCase
+	chatUseCase *service.ChatService
 	logger      logger.Interface
 }
 
-func newChatRoutes(handler *gin.RouterGroup, chatUseCase *usecases.ChatUseCase, logger logger.Interface) {
+func NewChatRoutes(handler *gin.RouterGroup, chatUseCase *service.ChatService, logger logger.Interface) {
 	uC := &chatRoutes{
 		chatUseCase: chatUseCase,
 		logger:      logger,
@@ -23,7 +23,7 @@ func newChatRoutes(handler *gin.RouterGroup, chatUseCase *usecases.ChatUseCase, 
 
 	chatHandlerGroup := handler.Group("/chats")
 	{
-		chatHandlerGroup.POST("/add", uC.createChat)
+		chatHandlerGroup.POST("/add", uC.CreateChat)
 	}
 }
 
@@ -31,6 +31,7 @@ type chatId struct {
 	Id int `json:"chatId"`
 }
 
+// CreateChat
 // @Summary     Create new chat
 // @Description Create a new user with name and users.
 // @ID          createChat
@@ -41,8 +42,8 @@ type chatId struct {
 // @Failure	    400 {object} errorJSON
 // @Failure	    500 {object} errorJSON
 // @Router      /chats/add [post]
-func (r *chatRoutes) createChat(c *gin.Context) {
-	chatDTO := entities.ChatDTO{}
+func (r *chatRoutes) CreateChat(c *gin.Context) {
+	chatDTO := models.ChatDTO{}
 
 	err := c.BindJSON(&chatDTO)
 	if err != nil {
