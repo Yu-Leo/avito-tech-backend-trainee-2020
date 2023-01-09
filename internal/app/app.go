@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/controller/http/v1"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/usecases"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoint/http"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repository/psql"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/service"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/httpserver"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
@@ -32,14 +32,14 @@ func Run(cfg *config.Config) {
 
 	l.Info("Open Postgres connection")
 
-	userRepository := repositories.NewPostgresUserRepository(postgresConnection)
-	chatRepository := repositories.NewPostgresChatRepository(postgresConnection)
+	userRepository := psql.NewPostgresUserRepository(postgresConnection)
+	chatRepository := psql.NewPostgresChatRepository(postgresConnection)
 
-	userUserCase := usecases.NewUserUserCase(userRepository)
-	chatUserCase := usecases.NewChatUserCase(chatRepository)
+	userUserCase := service.NewUserService(userRepository)
+	chatUserCase := service.NewChatService(chatRepository)
 
 	ginEngine := gin.Default()
-	v1.NewRouter(ginEngine, l, userUserCase, chatUserCase)
+	http.NewRouter(ginEngine, l, userUserCase, chatUserCase)
 	httpServer := httpserver.New(ginEngine, httpserver.HostPort(cfg.Server.Host, cfg.Server.Port))
 	l.Info(fmt.Sprintf("Run server on %s:%d", cfg.Server.Host, cfg.Server.Port))
 

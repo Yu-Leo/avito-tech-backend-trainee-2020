@@ -1,0 +1,21 @@
+package service
+
+import (
+	"context"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repository"
+)
+
+type UserService struct {
+	repository repository.UserRepository
+}
+
+func NewUserService(userRepository repository.UserRepository) *UserService {
+	return &UserService{
+		repository: userRepository,
+	}
+}
+
+func (s UserService) CreateUser(user models.UserDTO) (int, error) {
+	return s.repository.Create(context.Background(), user)
+}

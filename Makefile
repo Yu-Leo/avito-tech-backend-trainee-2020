@@ -11,5 +11,5 @@ stop: ### Down docker-compose
 .PHONY: stop
 
 init-swag-v1: ### Init swag
-	swag init -g internal/controller/http/v1/router.go
+	swag init -g internal/endpoint/http/router.go
 .PHONY: init-swag-v1

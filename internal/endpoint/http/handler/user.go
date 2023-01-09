@@ -1,17 +1,17 @@
-package v1
+package handler
 
 import (
 	"errors"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/entities"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/usecases"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/service"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type userRoutes struct {
-	userUseCase *usecases.UserUseCase
+	userUseCase *service.UserService
 	logger      logger.Interface
 }
 
@@ -19,7 +19,7 @@ type errorJSON struct {
 	Message string `json:"message"`
 }
 
-func newUserRoutes(handler *gin.RouterGroup, userUseCase *usecases.UserUseCase, logger logger.Interface) {
+func NewUserRoutes(handler *gin.RouterGroup, userUseCase *service.UserService, logger logger.Interface) {
 	uR := &userRoutes{
 		userUseCase: userUseCase,
 		logger:      logger,
@@ -27,7 +27,7 @@ func newUserRoutes(handler *gin.RouterGroup, userUseCase *usecases.UserUseCase, 
 
 	userHandlerGroup := handler.Group("/users")
 	{
-		userHandlerGroup.POST("/add", uR.createUser)
+		userHandlerGroup.POST("/add", uR.CreateUser)
 	}
 }
 
@@ -35,6 +35,7 @@ type userId struct {
 	Id int `json:"userId"`
 }
 
+// CreateUser
 // @Summary     Create new user
 // @Description Create a new user with username.
 // @ID          createUser
@@ -45,8 +46,8 @@ type userId struct {
 // @Failure	    400 {object} errorJSON
 // @Failure	    500 {object} errorJSON
 // @Router      /users/add [post]
-func (r *userRoutes) createUser(c *gin.Context) {
-	userDTO := entities.UserDTO{}
+func (r *userRoutes) CreateUser(c *gin.Context) {
+	userDTO := models.UserDTO{}
 
 	err := c.BindJSON(&userDTO)
 	if err != nil {

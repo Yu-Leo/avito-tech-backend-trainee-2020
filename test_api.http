@@ -3,7 +3,7 @@ POST http://127.0.0.1:9000/users/add
 Content-Type: application/json
 
 {
-  "username": "ivan 452"
+  "username": "ivan 0"
 }
 
 
