@@ -11,7 +11,7 @@ import (
 )
 
 type userRoutes struct {
-	userUseCase *service.UserService
+	userService *service.UserService
 	logger      logger.Interface
 }
 
@@ -19,9 +19,9 @@ type errorJSON struct {
 	Message string `json:"message"`
 }
 
-func NewUserRoutes(handler *gin.RouterGroup, userUseCase *service.UserService, logger logger.Interface) {
+func NewUserRoutes(handler *gin.RouterGroup, userService *service.UserService, logger logger.Interface) {
 	uR := &userRoutes{
-		userUseCase: userUseCase,
+		userService: userService,
 		logger:      logger,
 	}
 
@@ -55,7 +55,7 @@ func (r *userRoutes) CreateUser(c *gin.Context) {
 		return
 	}
 
-	newUserId, err := r.userUseCase.CreateUser(userDTO)
+	newUserId, err := r.userService.CreateUser(userDTO)
 	if err != nil {
 		if errors.Is(err, apperror.UsernameAlreadyExists) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
