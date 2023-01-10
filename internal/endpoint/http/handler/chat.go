@@ -11,19 +11,20 @@ import (
 )
 
 type chatRoutes struct {
-	messageService *service.ChatService
-	logger         logger.Interface
+	chatService *service.ChatService
+	logger      logger.Interface
 }
 
 func NewChatRoutes(handler *gin.RouterGroup, chatService *service.ChatService, logger logger.Interface) {
 	uC := &chatRoutes{
-		messageService: chatService,
-		logger:         logger,
+		chatService: chatService,
+		logger:      logger,
 	}
 
 	chatHandlerGroup := handler.Group("/chats")
 	{
 		chatHandlerGroup.POST("/add", uC.CreateChat)
+		chatHandlerGroup.POST("/get", uC.GetUserChats)
 	}
 }
 
@@ -43,7 +44,7 @@ type chatId struct {
 // @Failure	    500 {object} errorJSON
 // @Router      /chats/add [post]
 func (r *chatRoutes) CreateChat(c *gin.Context) {
-	chatDTO := models.ChatDTO{}
+	chatDTO := models.CreateChatDTO{}
 
 	err := c.BindJSON(&chatDTO)
 	if err != nil {
@@ -51,7 +52,7 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 		return
 	}
 
-	newChatID, err := r.messageService.CreateChat(chatDTO)
+	newChatID, err := r.chatService.CreateChat(chatDTO)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
@@ -62,4 +63,38 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, chatId{newChatID})
+}
+
+// GetUserChats
+// @Summary     Get a list of user chats by ID
+// @Description Get a list of user chats by ID.
+// @ID          getUserChats
+// @Tags  	    chat
+// @Accept      json
+// @Produce     json
+// @Success     200 {list} models.GetUserChatsDTOAnswer
+// @Failure	    400 {object} errorJSON
+// @Failure	    500 {object} errorJSON
+// @Router      /chats/get [post]
+func (r *chatRoutes) GetUserChats(c *gin.Context) {
+	userChatsDTORequest := models.GetUserChatsDTORequest{}
+
+	err := c.BindJSON(&userChatsDTORequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+		return
+	}
+
+	userChatsDTOAnswer, err := r.chatService.GetUserChats(userChatsDTORequest)
+	if err != nil {
+		if errors.Is(err, apperror.IDNotFound) {
+			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		r.logger.Error(err.Error())
+		return
+	}
+
+	c.JSON(http.StatusCreated, userChatsDTOAnswer)
 }
