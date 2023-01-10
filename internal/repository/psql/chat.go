@@ -9,6 +9,7 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
+	"time"
 )
 
 type chatRepository struct {
@@ -21,7 +22,7 @@ func NewPostgresChatRepository(pc postgresql.Connection) repository.ChatReposito
 	}
 }
 
-func (cr *chatRepository) Create(ctx context.Context, chat models.ChatDTO) (chatID int, err error) {
+func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatDTO) (chatID int, err error) {
 	transaction, err := cr.postgresConnection.Begin(context.Background())
 	if err != nil {
 		return 0, err
@@ -59,4 +60,21 @@ VALUES ($1, $2);
 	}
 
 	return chatID, nil
+}
+
+func (cr *chatRepository) GetUserChats(context.Context, models.GetUserChatsDTORequest) ([]models.GetUserChatsDTOAnswer, error) {
+	answer := make([]models.GetUserChatsDTOAnswer, 1)
+
+	users := make([]int, 3)
+	users[0] = 1
+	users[1] = 2
+	users[2] = 3
+
+	answer[0] = models.GetUserChatsDTOAnswer{
+		Id:        0,
+		Name:      "Chat 0",
+		Users:     users,
+		CreatedAt: time.Time{},
+	}
+	return answer, nil
 }
