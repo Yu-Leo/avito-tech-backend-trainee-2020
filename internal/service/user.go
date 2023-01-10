@@ -16,6 +16,6 @@ func NewUserService(userRepository repository.UserRepository) *UserService {
 	}
 }
 
-func (s UserService) CreateUser(user models.UserDTO) (int, error) {
+func (s UserService) CreateUser(user models.CreateUserDTO) (int, error) {
 	return s.repository.Create(context.Background(), user)
 }

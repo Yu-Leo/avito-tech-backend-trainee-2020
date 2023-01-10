@@ -21,7 +21,7 @@ func NewPostgresUserRepository(pc postgresql.Connection) repository.UserReposito
 	}
 }
 
-func (ur *userRepository) Create(ctx context.Context, user models.UserDTO) (userID int, err error) {
+func (ur *userRepository) Create(ctx context.Context, user models.CreateUserDTO) (userID int, err error) {
 	q := `
 INSERT INTO users (username)
 VALUES ($1)

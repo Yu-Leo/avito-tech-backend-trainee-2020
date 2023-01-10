@@ -16,6 +16,6 @@ func NewMessageService(messageRepository repository.MessageRepository) *MessageS
 	}
 }
 
-func (s MessageService) CreateMessage(message models.MessageDTO) (int, error) {
+func (s MessageService) CreateMessage(message models.CreateMessageDTO) (int, error) {
 	return s.repository.Create(context.Background(), message)
 }

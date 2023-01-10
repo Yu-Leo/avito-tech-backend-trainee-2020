@@ -8,6 +8,6 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-type UserDTO struct {
+type CreateUserDTO struct {
 	Username string `json:"username" binding:"required"`
 }

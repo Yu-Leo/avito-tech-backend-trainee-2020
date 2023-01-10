@@ -47,7 +47,7 @@ type userId struct {
 // @Failure	    500 {object} errorJSON
 // @Router      /users/add [post]
 func (r *userRoutes) CreateUser(c *gin.Context) {
-	userDTO := models.UserDTO{}
+	userDTO := models.CreateUserDTO{}
 
 	err := c.BindJSON(&userDTO)
 	if err != nil {
