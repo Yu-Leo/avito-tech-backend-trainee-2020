@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type MessageDTO struct {
+type CreateMessageDTO struct {
 	ChatId int    `json:"chat"`
 	UserId int    `json:"author"`
 	Text   string `json:"text"`

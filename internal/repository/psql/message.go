@@ -22,7 +22,7 @@ func NewPostgresMessageRepository(pc postgresql.Connection) repository.MessageRe
 	}
 }
 
-func (mr *messageRepository) Create(ctx context.Context, chat models.MessageDTO) (messageID int, err error) {
+func (mr *messageRepository) Create(ctx context.Context, chat models.CreateMessageDTO) (messageID int, err error) {
 	q := `
 INSERT INTO messages (user_id, chat_id, message_text)
 VALUES ($1, $2, $3)

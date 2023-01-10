@@ -43,7 +43,7 @@ type messageId struct {
 // @Failure	    500 {object} errorJSON
 // @Router      /messages/add [post]
 func (r *messageRoutes) CreateMessage(c *gin.Context) {
-	messageDTO := models.MessageDTO{}
+	messageDTO := models.CreateMessageDTO{}
 
 	err := c.BindJSON(&messageDTO)
 	if err != nil {
