@@ -11,14 +11,14 @@ import (
 )
 
 type chatRoutes struct {
-	chatUseCase *service.ChatService
-	logger      logger.Interface
+	messageService *service.ChatService
+	logger         logger.Interface
 }
 
-func NewChatRoutes(handler *gin.RouterGroup, chatUseCase *service.ChatService, logger logger.Interface) {
+func NewChatRoutes(handler *gin.RouterGroup, chatService *service.ChatService, logger logger.Interface) {
 	uC := &chatRoutes{
-		chatUseCase: chatUseCase,
-		logger:      logger,
+		messageService: chatService,
+		logger:         logger,
 	}
 
 	chatHandlerGroup := handler.Group("/chats")
@@ -33,7 +33,7 @@ type chatId struct {
 
 // CreateChat
 // @Summary     Create new chat
-// @Description Create a new user with name and users.
+// @Description Create a new chat with name and users.
 // @ID          createChat
 // @Tags  	    chat
 // @Accept      json
@@ -51,7 +51,7 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 		return
 	}
 
-	newChatID, err := r.chatUseCase.CreateChat(chatDTO)
+	newChatID, err := r.messageService.CreateChat(chatDTO)
 	if err != nil {
 		if errors.Is(err, apperror.UserIDNotFound) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
