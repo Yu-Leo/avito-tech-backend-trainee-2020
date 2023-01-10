@@ -10,48 +10,48 @@ import (
 	"net/http"
 )
 
-type chatRoutes struct {
-	messageService *service.ChatService
+type messageRoutes struct {
+	messageService *service.MessageService
 	logger         logger.Interface
 }
 
-func NewChatRoutes(handler *gin.RouterGroup, chatService *service.ChatService, logger logger.Interface) {
-	uC := &chatRoutes{
-		messageService: chatService,
+func NewMessageRoutes(handler *gin.RouterGroup, messageService *service.MessageService, logger logger.Interface) {
+	uC := &messageRoutes{
+		messageService: messageService,
 		logger:         logger,
 	}
 
-	chatHandlerGroup := handler.Group("/chats")
+	chatHandlerGroup := handler.Group("/messages")
 	{
-		chatHandlerGroup.POST("/add", uC.CreateChat)
+		chatHandlerGroup.POST("/add", uC.CreateMessage)
 	}
 }
 
-type chatId struct {
-	Id int `json:"chatId"`
+type messageId struct {
+	Id int `json:"messageId"`
 }
 
-// CreateChat
-// @Summary     Create new chat
-// @Description Create a new chat with name and users.
-// @ID          createChat
+// CreateMessage
+// @Summary     Create new message
+// @Description Create a new message with chat's name, author and text.
+// @ID          createMessage
 // @Tags  	    chat
 // @Accept      json
 // @Produce     json
-// @Success     200 {object} chatId
+// @Success     200 {object} messageId
 // @Failure	    400 {object} errorJSON
 // @Failure	    500 {object} errorJSON
-// @Router      /chats/add [post]
-func (r *chatRoutes) CreateChat(c *gin.Context) {
-	chatDTO := models.ChatDTO{}
+// @Router      /messages/add [post]
+func (r *messageRoutes) CreateMessage(c *gin.Context) {
+	messageDTO := models.MessageDTO{}
 
-	err := c.BindJSON(&chatDTO)
+	err := c.BindJSON(&messageDTO)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
 		return
 	}
+	newMessageID, err := r.messageService.CreateMessage(messageDTO)
 
-	newChatID, err := r.messageService.CreateChat(chatDTO)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
@@ -61,5 +61,5 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 		r.logger.Error(err.Error())
 		return
 	}
-	c.JSON(http.StatusCreated, chatId{newChatID})
+	c.JSON(http.StatusCreated, messageId{newMessageID})
 }

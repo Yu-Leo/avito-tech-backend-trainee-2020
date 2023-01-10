@@ -3,12 +3,12 @@ POST http://127.0.0.1:9000/users/add
 Content-Type: application/json
 
 {
-  "username": "ivan 0"
+  "username": "ivan"
 }
 
 
 ###
-POST http://localhost:9000/chats/add
+POST http://127.0.0.1:9000/chats/add
 Content-Type: application/json
 
 {
@@ -16,4 +16,14 @@ Content-Type: application/json
   "users": [
     1
   ]
+}
+
+###
+POST http://127.0.0.1:9000/messages/add
+Content-Type: application/json
+
+{
+  "chat": 20,
+  "author": 15,
+  "text": "Text"
 }

@@ -47,7 +47,7 @@ VALUES ($1, $2);
 		if err != nil {
 			var pgErr *pgconn.PgError
 			if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
-				return 0, apperror.UserIDNotFound
+				return 0, apperror.IDNotFound
 			}
 			return 0, err
 		}

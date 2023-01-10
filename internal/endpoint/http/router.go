@@ -21,15 +21,16 @@ import (
 // @BasePath  /
 
 func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
-	userUseCase *service.UserService, chatUseCase *service.ChatService) {
+	userService *service.UserService, chatService *service.ChatService, messageService *service.MessageService) {
 
 	// Routers
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	router := ginEngine.Group("")
 	{
-		handler.NewUserRoutes(router, userUseCase, logger)
-		handler.NewChatRoutes(router, chatUseCase, logger)
+		handler.NewUserRoutes(router, userService, logger)
+		handler.NewChatRoutes(router, chatService, logger)
+		handler.NewMessageRoutes(router, messageService, logger)
 	}
 
 }

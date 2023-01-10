@@ -5,8 +5,8 @@ var (
 		"The user with the specified username already exists",
 		"")
 
-	UserIDNotFound = NewAppError(
-		"The user with the specified id not found",
+	IDNotFound = NewAppError(
+		"The object with the specified id not found",
 		"")
 )
 
