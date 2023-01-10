@@ -34,12 +34,14 @@ func Run(cfg *config.Config) {
 
 	userRepository := psql.NewPostgresUserRepository(postgresConnection)
 	chatRepository := psql.NewPostgresChatRepository(postgresConnection)
+	messageRepository := psql.NewPostgresMessageRepository(postgresConnection)
 
-	userUserCase := service.NewUserService(userRepository)
-	chatUserCase := service.NewChatService(chatRepository)
+	userService := service.NewUserService(userRepository)
+	chatService := service.NewChatService(chatRepository)
+	messageService := service.NewMessageService(messageRepository)
 
 	ginEngine := gin.Default()
-	http.NewRouter(ginEngine, l, userUserCase, chatUserCase)
+	http.NewRouter(ginEngine, l, userService, chatService, messageService)
 	httpServer := httpserver.New(ginEngine, httpserver.HostPort(cfg.Server.Host, cfg.Server.Port))
 	l.Info(fmt.Sprintf("Run server on %s:%d", cfg.Server.Host, cfg.Server.Port))
 
