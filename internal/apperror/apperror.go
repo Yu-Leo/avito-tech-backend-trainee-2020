@@ -8,6 +8,10 @@ var (
 	IDNotFound = NewAppError(
 		"The object with the specified id not found",
 		"")
+
+	InternalServerError = NewAppError(
+		"Internal Server Error",
+		"")
 )
 
 type AppError struct {

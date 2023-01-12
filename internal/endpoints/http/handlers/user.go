@@ -62,7 +62,7 @@ func (r *userRoutes) CreateUser(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}

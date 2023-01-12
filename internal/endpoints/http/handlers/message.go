@@ -58,7 +58,7 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}
@@ -91,10 +91,10 @@ func (r *messageRoutes) GetChatMessages(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}
 
-	c.JSON(http.StatusCreated, *chatMessages)
+	c.JSON(http.StatusOK, *chatMessages)
 }
