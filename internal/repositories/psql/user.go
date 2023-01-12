@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repository"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -15,7 +15,7 @@ type userRepository struct {
 	postgresConnection postgresql.Connection
 }
 
-func NewPostgresUserRepository(pc postgresql.Connection) repository.UserRepository {
+func NewPostgresUserRepository(pc postgresql.Connection) repositories.UserRepository {
 	return &userRepository{
 		postgresConnection: pc,
 	}

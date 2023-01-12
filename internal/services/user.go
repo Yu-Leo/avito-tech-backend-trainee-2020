@@ -1,16 +1,16 @@
-package service
+package services
 
 import (
 	"context"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repository"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
 )
 
 type UserService struct {
-	repository repository.UserRepository
+	repository repositories.UserRepository
 }
 
-func NewUserService(userRepository repository.UserRepository) *UserService {
+func NewUserService(userRepository repositories.UserRepository) *UserService {
 	return &UserService{
 		repository: userRepository,
 	}

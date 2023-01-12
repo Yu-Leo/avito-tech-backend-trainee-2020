@@ -1,17 +1,17 @@
-package handler
+package handlers
 
 import (
 	"errors"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/service"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/services"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type userRoutes struct {
-	userService *service.UserService
+	userService *services.UserService
 	logger      logger.Interface
 }
 
@@ -19,7 +19,7 @@ type errorJSON struct {
 	Message string `json:"message"`
 }
 
-func NewUserRoutes(handler *gin.RouterGroup, userService *service.UserService, logger logger.Interface) {
+func NewUserRoutes(handler *gin.RouterGroup, userService *services.UserService, logger logger.Interface) {
 	uR := &userRoutes{
 		userService: userService,
 		logger:      logger,

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repository"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -16,7 +16,7 @@ type messageRepository struct {
 	postgresConnection postgresql.Connection
 }
 
-func NewPostgresMessageRepository(pc postgresql.Connection) repository.MessageRepository {
+func NewPostgresMessageRepository(pc postgresql.Connection) repositories.MessageRepository {
 	return &messageRepository{
 		postgresConnection: pc,
 	}

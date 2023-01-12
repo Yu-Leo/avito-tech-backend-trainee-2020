@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repository"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -16,7 +16,7 @@ type chatRepository struct {
 	postgresConnection postgresql.Connection
 }
 
-func NewPostgresChatRepository(pc postgresql.Connection) repository.ChatRepository {
+func NewPostgresChatRepository(pc postgresql.Connection) repositories.ChatRepository {
 	return &chatRepository{
 		postgresConnection: pc,
 	}

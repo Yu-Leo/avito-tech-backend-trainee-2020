@@ -1,16 +1,16 @@
-package service
+package services
 
 import (
 	"context"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repository"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
 )
 
 type ChatService struct {
-	repository repository.ChatRepository
+	repository repositories.ChatRepository
 }
 
-func NewChatService(chatRepository repository.ChatRepository) *ChatService {
+func NewChatService(chatRepository repositories.ChatRepository) *ChatService {
 	return &ChatService{
 		repository: chatRepository,
 	}
