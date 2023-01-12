@@ -58,7 +58,7 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}
@@ -91,10 +91,10 @@ func (r *chatRoutes) GetUserChats(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}
 
-	c.JSON(http.StatusCreated, *userChatsDTOAnswer)
+	c.JSON(http.StatusOK, *userChatsDTOAnswer)
 }
