@@ -3,7 +3,7 @@ run: ### Run docker-compose
 .PHONY: run
 
 run-postgres: ### Run docker-compose only with postgres
-	docker-compose up -d postgres
+	docker-compose up postgres
 .PHONY: run-postgres
 
 stop: ### Down docker-compose

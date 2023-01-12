@@ -12,6 +12,7 @@ services:
       POSTGRES_DB: 'postgres'
     ports:
       - "5432:5432"
+    command: ["postgres", "-c", "log_statement=all"]
 
   webapp:
     build: .
