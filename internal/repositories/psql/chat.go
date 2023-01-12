@@ -9,7 +9,6 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
-	"time"
 )
 
 type chatRepository struct {
@@ -62,19 +61,62 @@ VALUES ($1, $2);
 	return chatID, nil
 }
 
-func (cr *chatRepository) GetUserChats(context.Context, models.GetUserChatsDTORequest) ([]models.GetUserChatsDTOAnswer, error) {
-	answer := make([]models.GetUserChatsDTOAnswer, 1)
-
-	users := make([]int, 3)
-	users[0] = 1
-	users[1] = 2
-	users[2] = 3
-
-	answer[0] = models.GetUserChatsDTOAnswer{
-		Id:        0,
-		Name:      "Chat 0",
-		Users:     users,
-		CreatedAt: time.Time{},
+func (cr *chatRepository) GetUserChats(ctx context.Context, chat models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOAnswer, error) {
+	transaction, err := cr.postgresConnection.Begin(context.Background())
+	if err != nil {
+		return nil, err
 	}
-	return answer, nil
+	defer transaction.Rollback(context.Background())
+
+	answer := make([]models.GetUserChatsDTOAnswer, 0)
+	q1 := `
+SELECT chats.id, chats.name, chats.created_at
+FROM users_chats
+JOIN chats on users_chats.chat_id = chats.id
+WHERE users_chats.user_id = $1
+ORDER BY (SELECT (MAX(created_at))
+          FROM messages
+          WHERE chat_id = users_chats.chat_id
+          GROUP BY chat_id) DESC;
+`
+	rows, err := transaction.Query(ctx, q1, chat.User)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		userChat := models.GetUserChatsDTOAnswer{}
+		err = rows.Scan(&userChat.Id, &userChat.Name, &userChat.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		answer = append(answer, userChat)
+	}
+
+	for i := range answer {
+		q2 := `
+SELECT users_chats.user_id
+FROM users_chats
+WHERE users_chats.chat_id = $1;
+`
+		chatUsers, err := transaction.Query(ctx, q2, answer[i].Id)
+		if err != nil {
+			return nil, err
+		}
+		for chatUsers.Next() {
+			var userId int
+			err = chatUsers.Scan(&userId)
+			if err != nil {
+				return nil, err
+			}
+			answer[i].Users = append(answer[i].Users, userId)
+		}
+	}
+
+	err = transaction.Commit(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	return &answer, nil
+
 }

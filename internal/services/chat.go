@@ -20,6 +20,6 @@ func (s ChatService) CreateChat(chat models.CreateChatDTO) (int, error) {
 	return s.repository.Create(context.Background(), chat)
 }
 
-func (s ChatService) GetUserChats(chat models.GetUserChatsDTORequest) ([]models.GetUserChatsDTOAnswer, error) {
+func (s ChatService) GetUserChats(chat models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOAnswer, error) {
 	return s.repository.GetUserChats(context.Background(), chat)
 }

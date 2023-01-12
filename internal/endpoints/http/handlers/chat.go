@@ -96,5 +96,5 @@ func (r *chatRoutes) GetUserChats(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, userChatsDTOAnswer)
+	c.JSON(http.StatusCreated, *userChatsDTOAnswer)
 }
