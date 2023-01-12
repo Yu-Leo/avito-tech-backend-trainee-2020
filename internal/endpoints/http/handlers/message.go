@@ -24,6 +24,7 @@ func NewMessageRoutes(handler *gin.RouterGroup, messageService *services.Message
 	chatHandlerGroup := handler.Group("/messages")
 	{
 		chatHandlerGroup.POST("/add", uC.CreateMessage)
+		chatHandlerGroup.POST("/get", uC.GetChatMessages)
 	}
 }
 
@@ -62,4 +63,38 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, messageId{newMessageID})
+}
+
+// GetChatMessages
+// @Summary     Get chat messages
+// @Description Get messages from chat.
+// @ID          GetChatMessages
+// @Tags  	    chat
+// @Accept      json
+// @Produce     json
+// @Success     200 {list} models.Message
+// @Failure	    400 {object} errorJSON
+// @Failure	    500 {object} errorJSON
+// @Router      /messages/add [post]
+func (r *messageRoutes) GetChatMessages(c *gin.Context) {
+	chatMessagesDTORequest := models.GetChatMessagesDRORequest{}
+
+	err := c.BindJSON(&chatMessagesDTORequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+		return
+	}
+
+	chatMessages, err := r.messageService.GetChatMessages(chatMessagesDTORequest)
+	if err != nil {
+		if errors.Is(err, apperror.IDNotFound) {
+			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, errorJSON{"Internal Server Error"})
+		r.logger.Error(err.Error())
+		return
+	}
+
+	c.JSON(http.StatusCreated, *chatMessages)
 }

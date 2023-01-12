@@ -19,3 +19,7 @@ func NewMessageService(messageRepository repositories.MessageRepository) *Messag
 func (s MessageService) CreateMessage(message models.CreateMessageDTO) (int, error) {
 	return s.repository.Create(context.Background(), message)
 }
+
+func (s MessageService) GetChatMessages(chat models.GetChatMessagesDRORequest) (*[]models.Message, error) {
+	return s.repository.GetChatMessages(context.Background(), chat)
+}

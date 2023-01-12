@@ -39,3 +39,30 @@ RETURNING messages.id;`
 	}
 	return messageID, nil
 }
+
+func (mr *messageRepository) GetChatMessages(ctx context.Context,
+	chat models.GetChatMessagesDRORequest) (*[]models.Message, error) {
+	answer := make([]models.Message, 0)
+
+	q := `
+SELECT id, user_id, chat_id, message_text, created_at
+FROM messages
+WHERE chat_id = $1
+
+`
+	rows, err := mr.postgresConnection.Query(ctx, q, chat.ChatId)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		message := models.Message{}
+		err = rows.Scan(&message.Id, &message.UserId, &message.ChatId, &message.Text, &message.CreatedAt)
+
+		if err != nil {
+			return nil, err
+		}
+		answer = append(answer, message)
+	}
+
+	return &answer, nil
+}

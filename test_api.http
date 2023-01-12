@@ -35,3 +35,11 @@ Content-Type: application/json
 {
   "user": 1
 }
+
+###
+POST http://127.0.0.1:9000/messages/get
+Content-Type: application/json
+
+{
+  "chat": 20
+}
