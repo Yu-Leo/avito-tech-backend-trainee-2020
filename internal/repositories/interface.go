@@ -7,6 +7,7 @@ import (
 
 type MessageRepository interface {
 	Create(context.Context, models.CreateMessageDTO) (int, error)
+	GetChatMessages(context.Context, models.GetChatMessagesDRORequest) (*[]models.Message, error)
 }
 
 type ChatRepository interface {
