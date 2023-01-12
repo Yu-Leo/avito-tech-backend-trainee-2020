@@ -1,21 +1,21 @@
-package handler
+package handlers
 
 import (
 	"errors"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/service"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/services"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type messageRoutes struct {
-	messageService *service.MessageService
+	messageService *services.MessageService
 	logger         logger.Interface
 }
 
-func NewMessageRoutes(handler *gin.RouterGroup, messageService *service.MessageService, logger logger.Interface) {
+func NewMessageRoutes(handler *gin.RouterGroup, messageService *services.MessageService, logger logger.Interface) {
 	uC := &messageRoutes{
 		messageService: messageService,
 		logger:         logger,
