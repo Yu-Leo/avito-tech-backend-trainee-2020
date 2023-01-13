@@ -21,7 +21,7 @@
 
 ## :page_facing_up: Project description
 
-Based on **[technical specification (RU)](./docs/technical_specification_ru.md)**
+Based on **[technical specification (RU)](./docs/technical_specification_ru.md)**.
 
 A chat server that provides an HTTP API for working with user chats and messages.
 
@@ -67,7 +67,7 @@ See the API description in:
 - [`docs/swagger.json`](./docs/swagger.json)
 - [`docs/swagger.yaml`](./docs/swagger.yaml)
 
-[Open API Specification file Visualization](https://editor.swagger.io )
+[Open API Specification file Visualization](https://editor.swagger.io)
 
 After launching the service, you can view the documentation in the browser
 at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/index.html).
@@ -76,19 +76,19 @@ at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/in
 
 ## :hammer: Getting started
 
-### Run server and Postgres db in docker containers:
+### Run server and Postgres database in docker containers:
 
 ```bash
 make run
 ```
 
-### Run only Postgres db in docker containers:
+### Run only Postgres database in docker container:
 
 ```bash
 make run-postgres
 ```
 
-### Stop server and Postgres db:
+### Stop server and Postgres database:
 
 ```bash
 make stop
@@ -104,12 +104,14 @@ make init-swag
 
 ## :computer: Source code
 
-- [ ] Project structure (go-clean-template)
-- [ ] Config
+The project structure is based on [go-clean-template](https://github.com/evrone/go-clean-template).
 
-### :wrench: Technologies
+### Config
 
-#### BackEnd
+The configuration structure is described in [`config/config.go`](./config/config.go).
+Parameter values are set in the [`config/config.yaml`](./config/config.yaml) and in the environment variables.
+
+### Technologies
 
 - DBMS: **PostgreSQL**
 - Programming language: **Go (1.19.4)**
@@ -117,18 +119,18 @@ make init-swag
     - [`gin`](https://github.com/gin-gonic/gin) - HTTP web framework
     - [`pgx`](https://github.com/jackc/pgx) - PostgreSQL driver and toolkit
     - [`swag`](https://github.com/swaggo/swag) - Automatically generate RESTful API documentation with Swagger 2.0
+    - [`cleanenv`](http://github.com/ilyakaznacheev/cleanenv) - Clean and minimalistic environment configuration reader
+    - [`zerolog`](https://github.com/rs/zerolog) - Zero Allocation JSON Logger
     - [ ] Other libs
+- Tools
+    - **Docker** and **Docker compose**
+    - **`make`**
 
-#### Tools
-
-- **Docker** and **Docker compose**
-- **`make`**
-
-### :coffee: Tests
+### Tests
 
 - [ ] Unit tests (?)
 
-- [ ] Integration tests (?)
+- [ ] Integration tests
 
 <a id="chapter-4"></a>
 
