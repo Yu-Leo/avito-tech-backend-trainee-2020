@@ -11,13 +11,13 @@ type Message struct {
 }
 
 type CreateMessageDTO struct {
-	ChatId int    `json:"chat"`
-	UserId int    `json:"author"`
-	Text   string `json:"text"`
+	ChatId int    `json:"chat" binding:"required"`
+	UserId int    `json:"author" binding:"required"`
+	Text   string `json:"text" binding:"required"`
 }
 
 type GetChatMessagesDRORequest struct {
-	ChatId int `json:"chat"`
+	ChatId int `json:"chat" binding:"required"`
 }
 
 type MessageId struct {
