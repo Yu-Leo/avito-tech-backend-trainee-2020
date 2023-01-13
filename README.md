@@ -58,25 +58,47 @@ A message in the chat. It has the following properties:
 
 ## :pushpin: API
 
-- [ ] API
+:heavy_exclamation_mark: This API **does not** satisfy the RESTful API Best Practice.
+
+The URLs were specified in the [technical specification](./docs/technical_specification_ru.md).
+
+See the API description in:
+
+- [`docs/swagger.json`](./docs/swagger.json)
+- [`docs/swagger.yaml`](./docs/swagger.yaml)
+
+[Open API Specification file Visualization](https://editor.swagger.io )
+
+After launching the service, you can view the documentation in the browser
+at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/index.html).
 
 <a id="chapter-2"></a>
 
 ## :hammer: Getting started
 
-### Run server in docker:
+### Run server and Postgres db in docker containers:
 
 ```bash
 make run
 ```
 
-### Stop server:
+### Run only Postgres db in docker containers:
+
+```bash
+make run-postgres
+```
+
+### Stop server and Postgres db:
 
 ```bash
 make stop
 ```
 
-- [ ] Other `make` commands
+### Init (update) swagger docs:
+
+```bash
+make init-swag
+```
 
 <a id="chapter-3"></a>
 
