@@ -14,6 +14,10 @@ var (
 		"")
 )
 
+type ErrorJSON struct {
+	Message string `json:"message"`
+}
+
 type AppError struct {
 	Message          string `json:"message"`
 	DeveloperMessage string `json:"developerMessage"`

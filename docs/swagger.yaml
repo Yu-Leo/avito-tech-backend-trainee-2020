@@ -1,16 +1,47 @@
 basePath: /
 definitions:
-  v1.chatId:
-    properties:
-      chatId:
-        type: integer
-    type: object
-  v1.errorJSON:
+  apperror.ErrorJSON:
     properties:
       message:
         type: string
     type: object
-  v1.userId:
+  models.ChatId:
+    properties:
+      chatId:
+        type: integer
+    type: object
+  models.GetUserChatsDTOAnswer:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      users:
+        items:
+          type: integer
+        type: array
+    type: object
+  models.Message:
+    properties:
+      author:
+        type: integer
+      chat:
+        type: integer
+      createdAt:
+        type: string
+      id:
+        type: integer
+      text:
+        type: string
+    type: object
+  models.MessageId:
+    properties:
+      messageId:
+        type: integer
+    type: object
+  models.UserId:
     properties:
       userId:
         type: integer
@@ -20,33 +51,109 @@ info:
   contact:
     email: levayu22@gmail.com
     name: Lev Yuvensky
-  title: Avito-tech backend trainee task 2020
+  title: Avito.tech's task for backend trainee (2020 year)
   version: "1.0"
 paths:
   /chats/add:
     post:
       consumes:
       - application/json
-      description: Create a new user with name and users.
+      description: Create a new chat with name and list of users.
       operationId: createChat
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.ChatId'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.ErrorJSON'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apperror.ErrorJSON'
+      summary: Create new chat
+      tags:
+      - chat
+  /chats/get:
+    post:
+      consumes:
+      - application/json
+      description: Get a list of user chats by user ID.
+      operationId: getUserChats
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v1.chatId'
+            items:
+              $ref: '#/definitions/models.GetUserChatsDTOAnswer'
+            type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v1.errorJSON'
+            $ref: '#/definitions/apperror.ErrorJSON'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v1.errorJSON'
-      summary: Create new chat
+            $ref: '#/definitions/apperror.ErrorJSON'
+      summary: Get a list of user chats
       tags:
       - chat
+  /messages/add:
+    post:
+      consumes:
+      - application/json
+      description: Create a new message with chat's id, author's id and text.
+      operationId: createMessage
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.MessageId'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.ErrorJSON'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apperror.ErrorJSON'
+      summary: Create new message
+      tags:
+      - message
+  /messages/get:
+    post:
+      consumes:
+      - application/json
+      description: Get a list of chat messages by chat ID.
+      operationId: GetChatMessages
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Message'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.ErrorJSON'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apperror.ErrorJSON'
+      summary: Get a list of chat messages
+      tags:
+      - message
   /users/add:
     post:
       consumes:
@@ -59,15 +166,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/v1.userId'
+            $ref: '#/definitions/models.UserId'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/v1.errorJSON'
+            $ref: '#/definitions/apperror.ErrorJSON'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/v1.errorJSON'
+            $ref: '#/definitions/apperror.ErrorJSON'
       summary: Create new user
       tags:
       - user
