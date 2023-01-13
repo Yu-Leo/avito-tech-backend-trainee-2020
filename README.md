@@ -1,4 +1,4 @@
-<h1 align="center"> Avito-tech's task for backend trainee (2020 year) </h1>
+<h1 align="center"> Avito.tech's task for backend trainee (2020 year) </h1>
 
 <p align="center">
   <a href="https://github.com/Yu-Leo/avito-tech-backend-trainee-2020/blob/main/LICENSE" target="_blank"> <img alt="license" src="https://img.shields.io/github/license/Yu-Leo/avito-tech-backend-trainee-2020?style=for-the-badge&labelColor=090909"></a>
@@ -21,9 +21,38 @@
 
 ## :page_facing_up: Project description
 
-- [ ] Project description
-
 Based on **[technical specification (RU)](./docs/technical_specification_ru.md)**
+
+A chat server that provides an HTTP API for working with user chats and messages.
+
+### Entities
+
+#### User
+
+Application user. It has the following properties:
+
+- **id** *int* - unique user ID
+- **username** *string* - unique user name
+- **created_at** *datetime* - user creation time
+
+#### Chat
+
+A separate chat. It has the following properties:
+
+- **id** *int* - unique chat ID
+- **name** *string* - unique chat name
+- **users** *list[User]* - list of users in the chat (a many-to-many relationship)
+- **created_at** *datetime* - chat creation time
+
+#### Message
+
+A message in the chat. It has the following properties:
+
+- **id** *int* - unique message ID
+- **chat** *int* - link to the ID of the chat to which the message was sent
+- **author** *int* - a link to the sender ID of the message (a many-to-one relationship)
+- **text** *string* - the text of the sent message
+- **created_at** *datetime* - message creation time
 
 <a id="chapter-1"></a>
 
