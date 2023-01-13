@@ -21,7 +21,7 @@ const docTemplate = `{
     "paths": {
         "/chats/add": {
             "post": {
-                "description": "Create a new user with name and users.",
+                "description": "Create a new chat with name and list of users.",
                 "consumes": [
                     "application/json"
                 ],
@@ -34,22 +34,136 @@ const docTemplate = `{
                 "summary": "Create new chat",
                 "operationId": "createChat",
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/v1.chatId"
+                            "$ref": "#/definitions/models.ChatId"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v1.errorJSON"
+                            "$ref": "#/definitions/apperror.ErrorJSON"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v1.errorJSON"
+                            "$ref": "#/definitions/apperror.ErrorJSON"
+                        }
+                    }
+                }
+            }
+        },
+        "/chats/get": {
+            "post": {
+                "description": "Get a list of user chats by user ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chat"
+                ],
+                "summary": "Get a list of user chats",
+                "operationId": "getUserChats",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.GetUserChatsDTOAnswer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.ErrorJSON"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.ErrorJSON"
+                        }
+                    }
+                }
+            }
+        },
+        "/messages/add": {
+            "post": {
+                "description": "Create a new message with chat's id, author's id and text.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "message"
+                ],
+                "summary": "Create new message",
+                "operationId": "createMessage",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.MessageId"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.ErrorJSON"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.ErrorJSON"
+                        }
+                    }
+                }
+            }
+        },
+        "/messages/get": {
+            "post": {
+                "description": "Get a list of chat messages by chat ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "message"
+                ],
+                "summary": "Get a list of chat messages",
+                "operationId": "GetChatMessages",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Message"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.ErrorJSON"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.ErrorJSON"
                         }
                     }
                 }
@@ -73,19 +187,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/v1.userId"
+                            "$ref": "#/definitions/models.UserId"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/v1.errorJSON"
+                            "$ref": "#/definitions/apperror.ErrorJSON"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/v1.errorJSON"
+                            "$ref": "#/definitions/apperror.ErrorJSON"
                         }
                     }
                 }
@@ -93,15 +207,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "v1.chatId": {
-            "type": "object",
-            "properties": {
-                "chatId": {
-                    "type": "integer"
-                }
-            }
-        },
-        "v1.errorJSON": {
+        "apperror.ErrorJSON": {
             "type": "object",
             "properties": {
                 "message": {
@@ -109,7 +215,63 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.userId": {
+        "models.ChatId": {
+            "type": "object",
+            "properties": {
+                "chatId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.GetUserChatsDTOAnswer": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "models.Message": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "integer"
+                },
+                "chat": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MessageId": {
+            "type": "object",
+            "properties": {
+                "messageId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.UserId": {
             "type": "object",
             "properties": {
                 "userId": {
@@ -126,7 +288,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "127.0.0.1:9000",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Avito-tech backend trainee task 2020",
+	Title:            "Avito.tech's task for backend trainee (2020 year)",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

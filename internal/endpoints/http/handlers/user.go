@@ -15,10 +15,6 @@ type userRoutes struct {
 	logger      logger.Interface
 }
 
-type errorJSON struct {
-	Message string `json:"message"`
-}
-
 func NewUserRoutes(handler *gin.RouterGroup, userService *services.UserService, logger logger.Interface) {
 	uR := &userRoutes{
 		userService: userService,
@@ -31,10 +27,6 @@ func NewUserRoutes(handler *gin.RouterGroup, userService *services.UserService, 
 	}
 }
 
-type userId struct {
-	Id int `json:"userId"`
-}
-
 // CreateUser
 // @Summary     Create new user
 // @Description Create a new user with username.
@@ -42,30 +34,30 @@ type userId struct {
 // @Tags  	    user
 // @Accept      json
 // @Produce     json
-// @Success     200 {object} userId
-// @Failure	    400 {object} errorJSON
-// @Failure	    500 {object} errorJSON
+// @Success     200 {object} models.UserId
+// @Failure	    400 {object} apperror.ErrorJSON
+// @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /users/add [post]
 func (r *userRoutes) CreateUser(c *gin.Context) {
 	userDTO := models.CreateUserDTO{}
 
 	err := c.BindJSON(&userDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 		return
 	}
 
 	newUserId, err := r.userService.CreateUser(userDTO)
 	if err != nil {
 		if errors.Is(err, apperror.UsernameAlreadyExists) {
-			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 			return
 		}
 
-		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
+		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}
 
-	c.JSON(http.StatusCreated, userId{newUserId})
+	c.JSON(http.StatusCreated, newUserId)
 }

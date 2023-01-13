@@ -28,70 +28,66 @@ func NewMessageRoutes(handler *gin.RouterGroup, messageService *services.Message
 	}
 }
 
-type messageId struct {
-	Id int `json:"messageId"`
-}
-
 // CreateMessage
 // @Summary     Create new message
-// @Description Create a new message with chat's name, author and text.
+// @Description Create a new message with chat's id, author's id and text.
 // @ID          createMessage
-// @Tags  	    chat
+// @Tags  	    message
 // @Accept      json
 // @Produce     json
-// @Success     200 {object} messageId
-// @Failure	    400 {object} errorJSON
-// @Failure	    500 {object} errorJSON
+// @Success     201 {object} models.MessageId
+// @Failure	    400 {object} apperror.ErrorJSON
+// @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /messages/add [post]
 func (r *messageRoutes) CreateMessage(c *gin.Context) {
 	messageDTO := models.CreateMessageDTO{}
 
 	err := c.BindJSON(&messageDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 		return
 	}
 	newMessageID, err := r.messageService.CreateMessage(messageDTO)
 
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
-			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
+		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}
-	c.JSON(http.StatusCreated, messageId{newMessageID})
+	c.JSON(http.StatusCreated, newMessageID)
 }
 
 // GetChatMessages
-// @Summary     Get chat messages
-// @Description Get messages from chat.
+// @Summary     Get a list of chat messages
+// @Description Get a list of chat messages by chat ID.
 // @ID          GetChatMessages
-// @Tags  	    chat
+// @Tags  	    message
 // @Accept      json
 // @Produce     json
-// @Success     200 {list} models.Message
-// @Failure	    400 {object} errorJSON
-// @Failure	    500 {object} errorJSON
-// @Router      /messages/add [post]
+// @Success     200 {array} models.Message
+// @Failure	    400 {object} apperror.ErrorJSON
+// @Failure	    500 {object} apperror.ErrorJSON
+// @Router      /messages/get [post]
 func (r *messageRoutes) GetChatMessages(c *gin.Context) {
 	chatMessagesDTORequest := models.GetChatMessagesDRORequest{}
 
 	err := c.BindJSON(&chatMessagesDTORequest)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 		return
 	}
 
 	chatMessages, err := r.messageService.GetChatMessages(chatMessagesDTORequest)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
-			c.JSON(http.StatusBadRequest, errorJSON{err.Error()})
+			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, errorJSON{apperror.InternalServerError.Error()})
+		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
 	}

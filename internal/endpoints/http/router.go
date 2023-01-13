@@ -11,7 +11,7 @@ import (
 	_ "github.com/Yu-Leo/avito-tech-backend-trainee-2020/docs"
 )
 
-// @title           Avito-tech backend trainee task 2020
+// @title           Avito.tech's task for backend trainee (2020 year)
 // @version         1.0
 
 // @contact.name   Lev Yuvensky
