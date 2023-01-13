@@ -27,7 +27,5 @@ services:
     build:
       context: .
       dockerfile: integration-tests/Dockerfile
-    container_name: integration
-    image: integration
     depends_on:
       - webapp
