@@ -5,33 +5,33 @@ DROP TABLE IF EXISTS messages;
 
 CREATE TABLE users
 (
-    id         BIGSERIAL PRIMARY KEY UNIQUE,
-    username   VARCHAR(30) UNIQUE NOT NULL,
-    created_at TIMESTAMP          NOT NULL DEFAULT NOW()
+    id         bigserial PRIMARY KEY UNIQUE,
+    username   varchar(30) UNIQUE NOT NULL,
+    created_at timestamp          NOT NULL DEFAULT now()
 );
 
 
 CREATE TABLE chats
 (
-    id         BIGSERIAL PRIMARY KEY UNIQUE,
-    name       VARCHAR(30) NOT NULL,
-    created_at TIMESTAMP          NOT NULL DEFAULT NOW()
+    id         bigserial PRIMARY KEY UNIQUE,
+    name       varchar(30) UNIQUE NOT NULL,
+    created_at timestamp          NOT NULL DEFAULT now()
 );
 
 
 CREATE TABLE users_chats
 (
-    id      BIGSERIAL PRIMARY KEY UNIQUE,
-    user_id BIGSERIAL REFERENCES users (id) NOT NULL,
-    chat_id BIGSERIAL REFERENCES chats (id) NOT NULL
+    id      bigserial PRIMARY KEY UNIQUE,
+    user_id bigserial REFERENCES users (id) NOT NULL,
+    chat_id bigserial REFERENCES chats (id) NOT NULL
 );
 
 
 CREATE TABLE messages
 (
-    id           BIGSERIAL PRIMARY KEY UNIQUE,
-    user_id      BIGSERIAL REFERENCES users (id) NOT NULL,
-    chat_id      BIGSERIAL REFERENCES chats (id) NOT NULL,
-    message_text TEXT,
-    created_at   TIMESTAMP                       NOT NULL DEFAULT NOW()
+    id           bigserial PRIMARY KEY UNIQUE,
+    user_id      bigserial REFERENCES users (id) NOT NULL,
+    chat_id      bigserial REFERENCES chats (id) NOT NULL,
+    message_text text,
+    created_at   timestamp                       NOT NULL DEFAULT now()
 );
