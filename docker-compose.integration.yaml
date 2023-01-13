@@ -13,6 +13,7 @@ services:
     command: ["postgres", "-c", "log_statement=all"]
 
   webapp:
+    hostname: webapp
     build: .
     ports:
       - "127.0.0.1:9000:9000"
@@ -21,3 +22,12 @@ services:
     entrypoint: "/usr/local/bin/app"
     depends_on:
       - postgres
+
+  integration:
+    build:
+      context: .
+      dockerfile: integration-tests/Dockerfile
+    container_name: integration
+    image: integration
+    depends_on:
+      - webapp

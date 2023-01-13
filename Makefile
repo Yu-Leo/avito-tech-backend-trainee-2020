@@ -12,7 +12,7 @@ run-dev: ### Run docker-compose
 .PHONY: run
 
 integration-tests:
-	docker-compose -f docker-compose.integration.yaml up --build postgres webapp
+	docker-compose -f docker-compose.integration.yaml up --build
 .PHONY: integration-tests
 
 stop: ### Down docker-compose
