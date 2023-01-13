@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"net/http"
 
 	_ "github.com/Yu-Leo/avito-tech-backend-trainee-2020/docs"
 )
@@ -25,7 +26,7 @@ func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
 
 	// Routers
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-
+	ginEngine.GET("/health", func(c *gin.Context) { c.Status(http.StatusOK) })
 	router := ginEngine.Group("")
 	{
 		handlers.NewUserRoutes(router, userService, logger)
