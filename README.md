@@ -1,4 +1,4 @@
-<h1 align="center"> Avito.tech's task for backend trainee (2020 year) </h1>
+<h1 align="center"> <img src="https://avatars.githubusercontent.com/u/13049122?s=200&v=4" alt="avito.tech logo" width="30"> Avito.tech's task for backend trainee (2020 year) </h1>
 
 <p align="center">
   <a href="https://github.com/Yu-Leo/avito-tech-backend-trainee-2020/blob/main/LICENSE" target="_blank"> <img alt="license" src="https://img.shields.io/github/license/Yu-Leo/avito-tech-backend-trainee-2020?style=for-the-badge&labelColor=090909"></a>
