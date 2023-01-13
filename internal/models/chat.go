@@ -10,12 +10,12 @@ type Chat struct {
 }
 
 type CreateChatDTO struct {
-	Name  string `json:"name"`
-	Users []int  `json:"users"`
+	Name  string `json:"name" binding:"required"`
+	Users []int  `json:"users" binding:"required"`
 }
 
 type GetUserChatsDTORequest struct {
-	User int `json:"user"`
+	User int `json:"user" binding:"required"`
 }
 
 type GetUserChatsDTOAnswer struct {
