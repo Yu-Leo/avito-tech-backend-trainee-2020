@@ -5,6 +5,6 @@ WORKDIR /usr/src/app
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
-COPY . .
+COPY ./integration-tests .
 
-CMD ["go", "test", "-v", "./integration-tests/..."]
+ENTRYPOINT ["go", "test", "-v", "./..."]
