@@ -12,6 +12,10 @@ var (
 	InternalServerError = NewAppError(
 		"Internal Server Error",
 		"")
+
+	ChatNameAlreadyExists = NewAppError(
+		"The chat with the specified name already exists",
+		"")
 )
 
 type ErrorJSON struct {

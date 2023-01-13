@@ -22,6 +22,8 @@ func NewPostgresChatRepository(pc postgresql.Connection) repositories.ChatReposi
 }
 
 func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatDTO) (chatId models.ChatId, err error) {
+	var pgErr *pgconn.PgError
+
 	transaction, err := cr.postgresConnection.Begin(context.Background())
 	if err != nil {
 		return models.ChatId{}, err
@@ -35,6 +37,9 @@ RETURNING chats.id;
 				`
 	err = transaction.QueryRow(ctx, q1, chat.Name).Scan(&chatId.Id)
 	if err != nil {
+		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
+			return models.ChatId{}, apperror.ChatNameAlreadyExists
+		}
 		return models.ChatId{}, err
 	}
 	q2 := `
@@ -45,7 +50,6 @@ VALUES ($1, $2);
 		_, err = transaction.Exec(ctx, q2, userID, chatId.Id)
 
 		if err != nil {
-			var pgErr *pgconn.PgError
 			if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
 				return models.ChatId{}, apperror.IDNotFound
 			}

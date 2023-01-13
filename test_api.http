@@ -12,9 +12,9 @@ POST http://127.0.0.1:9000/chats/add
 Content-Type: application/json
 
 {
-  "name": "Chat 123",
+  "name": "Chat 12",
   "users": [
-    18
+    1
   ]
 }
 

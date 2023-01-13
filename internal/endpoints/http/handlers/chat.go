@@ -54,6 +54,10 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 			return
 		}
+		if errors.Is(err, apperror.ChatNameAlreadyExists) {
+			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerError.Error()})
 		r.logger.Error(err.Error())
 		return
