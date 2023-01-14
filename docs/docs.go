@@ -33,6 +33,17 @@ const docTemplate = `{
                 ],
                 "summary": "Create new chat",
                 "operationId": "createChat",
+                "parameters": [
+                    {
+                        "description": "Parameters for creating a chat.",
+                        "name": "createChatObject",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateChatDTO"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -69,6 +80,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get a list of user chats",
                 "operationId": "getUserChats",
+                "parameters": [
+                    {
+                        "description": "Parameters for getting user chats.",
+                        "name": "getUserChatsObject",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.GetUserChatsDTORequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -108,6 +130,17 @@ const docTemplate = `{
                 ],
                 "summary": "Create new message",
                 "operationId": "createMessage",
+                "parameters": [
+                    {
+                        "description": "Parameters for creating a message.",
+                        "name": "createMessageObject",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateMessageDTO"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -144,6 +177,17 @@ const docTemplate = `{
                 ],
                 "summary": "Get a list of chat messages",
                 "operationId": "GetChatMessages",
+                "parameters": [
+                    {
+                        "description": "Parameters for getting chat messages.",
+                        "name": "getChatsMessagesObject",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.GetChatMessagesDRORequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -183,6 +227,17 @@ const docTemplate = `{
                 ],
                 "summary": "Create new user",
                 "operationId": "createUser",
+                "parameters": [
+                    {
+                        "description": "Parameters for creating a user.",
+                        "name": "createUserObject",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateUserDTO"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -223,6 +278,65 @@ const docTemplate = `{
                 }
             }
         },
+        "models.CreateChatDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "users"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "models.CreateMessageDTO": {
+            "type": "object",
+            "required": [
+                "author",
+                "chat",
+                "text"
+            ],
+            "properties": {
+                "author": {
+                    "type": "integer"
+                },
+                "chat": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.CreateUserDTO": {
+            "type": "object",
+            "required": [
+                "username"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.GetChatMessagesDRORequest": {
+            "type": "object",
+            "required": [
+                "chat"
+            ],
+            "properties": {
+                "chat": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.GetUserChatsDTOAnswer": {
             "type": "object",
             "properties": {
@@ -240,6 +354,17 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
+                }
+            }
+        },
+        "models.GetUserChatsDTORequest": {
+            "type": "object",
+            "required": [
+                "user"
+            ],
+            "properties": {
+                "user": {
+                    "type": "integer"
                 }
             }
         },

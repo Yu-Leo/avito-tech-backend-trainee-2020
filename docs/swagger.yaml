@@ -10,6 +10,45 @@ definitions:
       chatId:
         type: integer
     type: object
+  models.CreateChatDTO:
+    properties:
+      name:
+        type: string
+      users:
+        items:
+          type: integer
+        type: array
+    required:
+    - name
+    - users
+    type: object
+  models.CreateMessageDTO:
+    properties:
+      author:
+        type: integer
+      chat:
+        type: integer
+      text:
+        type: string
+    required:
+    - author
+    - chat
+    - text
+    type: object
+  models.CreateUserDTO:
+    properties:
+      username:
+        type: string
+    required:
+    - username
+    type: object
+  models.GetChatMessagesDRORequest:
+    properties:
+      chat:
+        type: integer
+    required:
+    - chat
+    type: object
   models.GetUserChatsDTOAnswer:
     properties:
       createdAt:
@@ -22,6 +61,13 @@ definitions:
         items:
           type: integer
         type: array
+    type: object
+  models.GetUserChatsDTORequest:
+    properties:
+      user:
+        type: integer
+    required:
+    - user
     type: object
   models.Message:
     properties:
@@ -60,6 +106,13 @@ paths:
       - application/json
       description: Create a new chat with name and list of users.
       operationId: createChat
+      parameters:
+      - description: Parameters for creating a chat.
+        in: body
+        name: createChatObject
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateChatDTO'
       produces:
       - application/json
       responses:
@@ -84,6 +137,13 @@ paths:
       - application/json
       description: Get a list of user chats by user ID.
       operationId: getUserChats
+      parameters:
+      - description: Parameters for getting user chats.
+        in: body
+        name: getUserChatsObject
+        required: true
+        schema:
+          $ref: '#/definitions/models.GetUserChatsDTORequest'
       produces:
       - application/json
       responses:
@@ -110,6 +170,13 @@ paths:
       - application/json
       description: Create a new message with chat's id, author's id and text.
       operationId: createMessage
+      parameters:
+      - description: Parameters for creating a message.
+        in: body
+        name: createMessageObject
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateMessageDTO'
       produces:
       - application/json
       responses:
@@ -134,6 +201,13 @@ paths:
       - application/json
       description: Get a list of chat messages by chat ID.
       operationId: GetChatMessages
+      parameters:
+      - description: Parameters for getting chat messages.
+        in: body
+        name: getChatsMessagesObject
+        required: true
+        schema:
+          $ref: '#/definitions/models.GetChatMessagesDRORequest'
       produces:
       - application/json
       responses:
@@ -160,6 +234,13 @@ paths:
       - application/json
       description: Create a new user with username.
       operationId: createUser
+      parameters:
+      - description: Parameters for creating a user.
+        in: body
+        name: createUserObject
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUserDTO'
       produces:
       - application/json
       responses:
