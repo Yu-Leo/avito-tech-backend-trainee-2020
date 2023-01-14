@@ -35,6 +35,7 @@ func NewMessageRoutes(handler *gin.RouterGroup, messageService *services.Message
 // @Tags  	    message
 // @Accept      json
 // @Produce     json
+// @Param createMessageObject body models.CreateMessageDTO true "Parameters for creating a message."
 // @Success     201 {object} models.MessageId
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
@@ -68,6 +69,7 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 // @Tags  	    message
 // @Accept      json
 // @Produce     json
+// @Param getChatsMessagesObject body models.GetChatMessagesDRORequest true "Parameters for getting chat messages."
 // @Success     200 {array} models.Message
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
