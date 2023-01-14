@@ -3,7 +3,7 @@ run: ### Run docker-compose
 .PHONY: run
 
 run-postgres: ### Run docker-compose only with postgres
-	docker-compose up -d postgres
+	docker-compose -f docker-compose.dev.yaml  up -d postgres
 .PHONY: run-postgres
 
 run-dev: ### Run docker-compose
