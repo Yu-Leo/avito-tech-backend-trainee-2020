@@ -6,13 +6,18 @@ services:
     image: postgres
     ports:
       - "5432:5432"
-    volumes:
-      - pg-data:/var/lib/postgresql/data
+#    volumes:
+#      - pg-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'postgres'
     command: [ "postgres", "-c", "log_statement=all" ]
+
+  init-db:
+    build:
+      context: .
+      dockerfile: init/Dockerfile
 
   webapp:
     build: .
@@ -24,6 +29,6 @@ services:
     depends_on:
       - postgres
 
-
-volumes:
-  pg-data:
+#
+#volumes:
+#  pg-data:
