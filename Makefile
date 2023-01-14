@@ -1,9 +1,17 @@
 run: ### Run docker-compose
-	docker-compose up --build -d webapp
+	docker-compose -f docker-compose.dev.yaml up --build -d webapp
 .PHONY: run
 
+init-postgres:
+	docker-compose -f docker-compose.dev.yaml up -d postgres
+	sleep 5
+	docker-compose -f docker-compose.dev.yaml up --build init-db
+	sleep 5
+	docker-compose -f docker-compose.dev.yaml down
+.PHONY: init-postgres
+
 run-postgres: ### Run docker-compose only with postgres
-	docker-compose -f docker-compose.dev.yaml  up -d postgres
+	docker-compose -f docker-compose.dev.yaml up -d postgres
 .PHONY: run-postgres
 
 run-dev: ### Run docker-compose
@@ -16,7 +24,7 @@ integration-tests:
 .PHONY: integration-tests
 
 stop: ### Down docker-compose
-	docker-compose down
+	docker-compose -f docker-compose.dev.yaml down
 .PHONY: stop
 
 init-swag: ### Init swag
