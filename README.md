@@ -76,29 +76,7 @@ at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/in
 
 ## :hammer: Getting started
 
-### Run server and Postgres database in docker containers:
-
-```bash
-make run
-```
-
-### Run only Postgres database in docker container:
-
-```bash
-make run-postgres
-```
-
-### Stop server and Postgres database:
-
-```bash
-make stop
-```
-
-### Init (update) swagger docs:
-
-```bash
-make init-swag
-```
+- [ ] Make commands
 
 <a id="chapter-3"></a>
 
