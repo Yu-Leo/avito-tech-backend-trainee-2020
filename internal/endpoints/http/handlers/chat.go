@@ -51,11 +51,7 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 
 	newChatID, err := r.chatService.CreateChat(chatDTO)
 	if err != nil {
-		if errors.Is(err, apperror.IDNotFound) {
-			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
-			return
-		}
-		if errors.Is(err, apperror.ChatNameAlreadyExists) {
+		if errors.Is(err, apperror.IDNotFound) || errors.Is(err, apperror.ChatNameAlreadyExists) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 			return
 		}
