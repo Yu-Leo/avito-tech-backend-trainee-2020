@@ -60,5 +60,5 @@ func (r *userRoutes) CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, newUserId)
+	c.JSON(http.StatusCreated, *newUserId)
 }

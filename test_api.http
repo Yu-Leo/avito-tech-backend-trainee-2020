@@ -3,7 +3,7 @@ POST http://127.0.0.1:9000/users/add
 Content-Type: application/json
 
 {
-  "username": "ivan 6"
+  "username": "ivan 8"
 }
 
 
@@ -12,9 +12,9 @@ POST http://127.0.0.1:9000/chats/add
 Content-Type: application/json
 
 {
-  "name": "Chat 1212",
+  "name": "Chat 12124",
   "users": [
-    1, 4
+    9
   ]
 }
 
@@ -23,8 +23,8 @@ POST http://127.0.0.1:9000/messages/add
 Content-Type: application/json
 
 {
-  "chat": 4,
-  "author": 4,
+  "chat": 6,
+  "author":9,
   "text": "Text"
 }
 
@@ -33,7 +33,7 @@ POST http://127.0.0.1:9000/chats/get
 Content-Type: application/json
 
 {
-  "user": 4
+  "user": 9
 }
 
 ###
@@ -41,5 +41,5 @@ POST http://127.0.0.1:9000/messages/get
 Content-Type: application/json
 
 {
-  "chat": 4
+  "chat": 6
 }

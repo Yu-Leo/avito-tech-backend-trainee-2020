@@ -59,7 +59,7 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 		r.logger.Error(err.Error())
 		return
 	}
-	c.JSON(http.StatusCreated, newChatID)
+	c.JSON(http.StatusCreated, *newChatID)
 }
 
 // GetUserChats
