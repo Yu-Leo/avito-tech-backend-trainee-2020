@@ -1,28 +1,6 @@
 version: '3.9'
 
 services:
-  postgres:
-    hostname: postgres
-    image: postgres
-    environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres'
-      POSTGRES_DB: 'postgres'
-    ports:
-      - "5432:5432"
-    command: ["postgres", "-c", "log_statement=all"]
-
-  webapp:
-    hostname: webapp
-    build: .
-    ports:
-      - "127.0.0.1:9000:9000"
-    environment:
-      - DB_HOST=postgres
-    entrypoint: "/usr/local/bin/app"
-    depends_on:
-      - postgres
-
   integration:
     build:
       context: .
