@@ -75,6 +75,7 @@ WHERE chat_id = $1
 		}
 		answer = append(answer, message)
 	}
+	rows.Close()
 
 	return &answer, nil
 }
