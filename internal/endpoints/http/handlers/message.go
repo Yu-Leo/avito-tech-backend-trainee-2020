@@ -51,7 +51,7 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 	newMessageID, err := r.messageService.CreateMessage(messageDTO)
 
 	if err != nil {
-		if errors.Is(err, apperror.IDNotFound) {
+		if errors.Is(err, apperror.IDNotFound) || errors.Is(err, apperror.UserIsNotInChat) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 			return
 		}

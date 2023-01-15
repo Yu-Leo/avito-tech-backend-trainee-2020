@@ -16,6 +16,10 @@ var (
 	ChatNameAlreadyExists = NewAppError(
 		"The chat with the specified name already exists",
 		"")
+
+	UserIsNotInChat = NewAppError(
+		"The author of the message is not a member of the chat",
+		"")
 )
 
 type ErrorJSON struct {
