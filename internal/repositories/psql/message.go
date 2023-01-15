@@ -22,11 +22,26 @@ func NewPostgresMessageRepository(pc postgresql.Connection) repositories.Message
 }
 
 func (mr *messageRepository) Create(ctx context.Context, chat models.CreateMessageDTO) (messageId models.MessageId, err error) {
-	q := `
+	q1 := `
+SELECT id
+FROM users_chats
+WHERE user_id = $1 AND chat_id = $2
+`
+	rows, err := mr.postgresConnection.Query(ctx, q1, chat.UserId, chat.ChatId)
+
+	if err != nil {
+		return models.MessageId{}, err
+	}
+	if !rows.Next() {
+		return models.MessageId{}, apperror.UserIsNotInChat
+	}
+	rows.Close()
+
+	q2 := `
 INSERT INTO messages (user_id, chat_id, message_text)
 VALUES ($1, $2, $3)
 RETURNING messages.id;`
-	err = mr.postgresConnection.QueryRow(ctx, q, chat.UserId, chat.ChatId, chat.Text).Scan(&messageId.Id)
+	err = mr.postgresConnection.QueryRow(ctx, q2, chat.UserId, chat.ChatId, chat.Text).Scan(&messageId.Id)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
