@@ -33,7 +33,7 @@ POST http://127.0.0.1:9000/chats/get
 Content-Type: application/json
 
 {
-  "user": 18
+  "user": 4
 }
 
 ###
@@ -41,5 +41,5 @@ POST http://127.0.0.1:9000/messages/get
 Content-Type: application/json
 
 {
-  "chat": 38
+  "chat": 4
 }

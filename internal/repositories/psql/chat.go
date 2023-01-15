@@ -95,6 +95,7 @@ ORDER BY (SELECT (MAX(created_at))
 		}
 		answer = append(answer, userChat)
 	}
+	rows.Close()
 
 	for i := range answer {
 		q2 := `
@@ -115,6 +116,7 @@ WHERE users_chats.chat_id = $1;
 			answer[i].Users = append(answer[i].Users, userId)
 		}
 	}
+	rows.Close()
 
 	err = transaction.Commit(context.Background())
 	if err != nil {
