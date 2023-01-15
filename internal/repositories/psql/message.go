@@ -21,7 +21,9 @@ func NewPostgresMessageRepository(pc postgresql.Connection) repositories.Message
 	}
 }
 
-func (mr *messageRepository) Create(ctx context.Context, chat models.CreateMessageDTO) (messageId models.MessageId, err error) {
+func (mr *messageRepository) Create(ctx context.Context, chat models.CreateMessageDTO) (messageId *models.MessageId, err error) {
+	messageId = &models.MessageId{}
+
 	q1 := `
 SELECT id
 FROM users_chats
@@ -30,10 +32,10 @@ WHERE user_id = $1 AND chat_id = $2
 	rows, err := mr.postgresConnection.Query(ctx, q1, chat.UserId, chat.ChatId)
 
 	if err != nil {
-		return models.MessageId{}, err
+		return nil, err
 	}
 	if !rows.Next() {
-		return models.MessageId{}, apperror.UserIsNotInChat
+		return nil, apperror.UserIsNotInChat
 	}
 	rows.Close()
 
@@ -41,13 +43,13 @@ WHERE user_id = $1 AND chat_id = $2
 INSERT INTO messages (user_id, chat_id, message_text)
 VALUES ($1, $2, $3)
 RETURNING messages.id;`
-	err = mr.postgresConnection.QueryRow(ctx, q2, chat.UserId, chat.ChatId, chat.Text).Scan(&messageId.Id)
+	err = mr.postgresConnection.QueryRow(ctx, q2, chat.UserId, chat.ChatId, chat.Text).Scan(&(*messageId).Id)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
-			return models.MessageId{}, apperror.IDNotFound
+			return nil, apperror.IDNotFound
 		}
-		return models.MessageId{}, err
+		return nil, err
 	}
 	return messageId, nil
 }

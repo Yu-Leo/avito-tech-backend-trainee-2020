@@ -16,7 +16,7 @@ func NewChatService(chatRepository repositories.ChatRepository) *ChatService {
 	}
 }
 
-func (s ChatService) CreateChat(chat models.CreateChatDTO) (models.ChatId, error) {
+func (s ChatService) CreateChat(chat models.CreateChatDTO) (*models.ChatId, error) {
 	return s.repository.Create(context.Background(), chat)
 }
 

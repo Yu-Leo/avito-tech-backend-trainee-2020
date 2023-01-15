@@ -21,12 +21,13 @@ func NewPostgresChatRepository(pc postgresql.Connection) repositories.ChatReposi
 	}
 }
 
-func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatDTO) (chatId models.ChatId, err error) {
+func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatDTO) (chatId *models.ChatId, err error) {
 	var pgErr *pgconn.PgError
+	chatId = &models.ChatId{}
 
 	transaction, err := cr.postgresConnection.Begin(context.Background())
 	if err != nil {
-		return models.ChatId{}, err
+		return nil, err
 	}
 	defer transaction.Rollback(context.Background())
 
@@ -35,12 +36,12 @@ INSERT INTO chats (name)
 VALUES ($1)
 RETURNING chats.id;
 				`
-	err = transaction.QueryRow(ctx, q1, chat.Name).Scan(&chatId.Id)
+	err = transaction.QueryRow(ctx, q1, chat.Name).Scan(&(*chatId).Id)
 	if err != nil {
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
-			return models.ChatId{}, apperror.ChatNameAlreadyExists
+			return nil, apperror.ChatNameAlreadyExists
 		}
-		return models.ChatId{}, err
+		return nil, err
 	}
 	q2 := `
 INSERT INTO users_chats (user_id, chat_id)
@@ -51,15 +52,15 @@ VALUES ($1, $2);
 
 		if err != nil {
 			if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
-				return models.ChatId{}, apperror.IDNotFound
+				return nil, apperror.IDNotFound
 			}
-			return models.ChatId{}, err
+			return nil, err
 		}
 
 	}
 	err = transaction.Commit(context.Background())
 	if err != nil {
-		return models.ChatId{}, err
+		return nil, err
 	}
 
 	return chatId, nil

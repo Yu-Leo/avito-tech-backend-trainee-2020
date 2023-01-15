@@ -59,7 +59,7 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 		r.logger.Error(err.Error())
 		return
 	}
-	c.JSON(http.StatusCreated, newMessageID)
+	c.JSON(http.StatusCreated, *newMessageID)
 }
 
 // GetChatMessages
