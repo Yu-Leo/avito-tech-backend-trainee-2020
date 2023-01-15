@@ -3,7 +3,6 @@ package psql
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories"
@@ -31,8 +30,6 @@ RETURNING messages.id;`
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
-			fmt.Println(pgErr.Error())
-			fmt.Println(pgErr.Message)
 			return models.MessageId{}, apperror.IDNotFound
 		}
 		return models.MessageId{}, err
