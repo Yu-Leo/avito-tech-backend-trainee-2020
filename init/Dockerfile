@@ -4,4 +4,4 @@ WORKDIR /usr/src/app
 
 COPY ./init .
 
-ENTRYPOINT ["psql", "postgresql://postgres:postgres@postgres:5432/postgres", "-a", "-f", "init.sql"]
+ENTRYPOINT psql postgresql://$(echo $POSTGRES_USER):$(echo $POSTGRES_PASSWORD)@$(echo $POSTGRES_HOST):$(echo $POSTGRES_PORT)/$(echo $POSTGRES_DB) -a -f init.sql

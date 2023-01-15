@@ -10,7 +10,7 @@ dev-up-postgres: ### Run only Postgres in Docker container
 
 dev-init-db: ### Init database in Postgres Docker container
 	docker-compose -f docker-compose.dev.yaml up -d postgres
-	sleep 3
+	sleep 2
 	docker-compose -f docker-compose.dev.yaml up --build init-db
 	docker-compose -f docker-compose.dev.yaml down
 .PHONY: dev-init-db
