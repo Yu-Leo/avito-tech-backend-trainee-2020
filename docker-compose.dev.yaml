@@ -6,8 +6,8 @@ services:
     image: postgres
     ports:
       - "5432:5432"
-#    volumes:
-#      - pg-data:/var/lib/postgresql/data
+    volumes:
+      - pg-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
@@ -29,6 +29,5 @@ services:
     depends_on:
       - postgres
 
-#
-#volumes:
-#  pg-data:
+volumes:
+  pg-data:
