@@ -1,18 +1,17 @@
 package integration_tests
 
 import (
+	"bytes"
+	"errors"
 	"log"
 	"net/http"
 	"os"
 	"testing"
-	"time"
-
-	. "github.com/Eun/go-hit"
 )
 
 const (
 	// Attempts connection
-	host       = "localhost:9000"
+	host       = "webapp:9000"
 	healthPath = "http://" + host + "/health"
 	attempts   = 20
 
@@ -21,27 +20,33 @@ const (
 )
 
 func TestMain(m *testing.M) {
-	err := healthCheck(attempts)
+	err := healthCheck()
 	if err != nil {
-		log.Fatalf("Integration tests: host %s is not available: %s", host, err)
+		log.Fatalf("Host %s is not available: %s", host, err)
 	}
 
-	log.Printf("Integration tests: host %s is available", host)
+	log.Printf("Host %s is available", host)
 
 	code := m.Run()
 	os.Exit(code)
 }
 
-func healthCheck(attempts int) error {
-	var err error
-
-	for i := 0; i < attempts; i++ {
-		err = Do(Get(healthPath), Expect().Status().Equal(http.StatusOK))
-		if err == nil {
-			return nil
-		}
-		log.Printf("Integration tests: url %s is not available, attempts left: %d", healthPath, attempts)
-		time.Sleep(time.Second)
+func healthCheck() error {
+	req, err := http.NewRequest("GET", healthPath, &bytes.Buffer{})
+	if err != nil {
+		return err
 	}
-	return err
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode == http.StatusOK {
+		return nil
+	}
+	return errors.New("status code != 200 OK")
 }
