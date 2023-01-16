@@ -1,4 +1,4 @@
-package http
+package rest
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoints/http/handlers"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoints/rest/handlers"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/services"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 
@@ -28,12 +28,15 @@ func NewRouter(ginEngine *gin.Engine, logger logger.Interface,
 
 	// Routers
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	ginEngine.GET("/health", func(c *gin.Context) { c.Status(http.StatusOK) })
+	ginEngine.GET("/health", health)
 	router := ginEngine.Group("")
 	{
 		handlers.NewUserRoutes(router, userService, logger)
 		handlers.NewChatRoutes(router, chatService, logger)
 		handlers.NewMessageRoutes(router, messageService, logger)
 	}
+}
 
+func health(c *gin.Context) {
+	c.Status(http.StatusOK)
 }

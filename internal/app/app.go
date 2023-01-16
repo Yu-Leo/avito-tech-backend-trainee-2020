@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoints/http"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoints/rest"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories/psql"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/services"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/httpserver"
@@ -43,7 +43,7 @@ func Run(cfg *config.Config) {
 	messageService := services.NewMessageService(messageRepository)
 
 	ginEngine := gin.Default()
-	http.NewRouter(ginEngine, l, userService, chatService, messageService)
+	rest.NewRouter(ginEngine, l, userService, chatService, messageService)
 	httpServer := httpserver.New(ginEngine, httpserver.HostPort(cfg.Server.Host, cfg.Server.Port))
 	l.Info(fmt.Sprintf("Run server on %s:%d", cfg.Server.Host, cfg.Server.Port))
 
