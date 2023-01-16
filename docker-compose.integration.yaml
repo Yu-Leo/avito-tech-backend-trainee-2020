@@ -1,9 +1,46 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  integration:
+  postgres:
+    hostname: postgres
+    image: postgres
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "postgres"
+    command: [ "postgres", "-c", "log_statement=all" ]
+
+  init-db:
+    build:
+      context: .
+      dockerfile: init/Dockerfile
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: "postgres"
+    depends_on:
+      - postgres
+
+  integration-tests:
     build:
       context: .
       dockerfile: integration-tests/Dockerfile
     depends_on:
       - webapp
+
+  webapp:
+    build: .
+    ports:
+      - "127.0.0.1:9000:9000"
+    environment:
+      DB_HOST: "postgres"
+    entrypoint: "/usr/local/bin/app"
+    depends_on:
+      - postgres
+
+volumes:
+  pg-data:
