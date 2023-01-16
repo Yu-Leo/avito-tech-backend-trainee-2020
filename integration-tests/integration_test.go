@@ -15,6 +15,9 @@ const (
 	host       = "webapp:9000"
 	healthPath = "http://" + host + "/health"
 	attempts   = 20
+
+	// HTTP REST
+	basePath = "http://" + host
 )
 
 func TestMain(m *testing.M) {
@@ -46,4 +49,68 @@ func healthCheck(attempts int) error {
 	}
 
 	return err
+}
+
+// HTTP POST: /users/add
+func TestHTTPAddUserSuccess(t *testing.T) {
+	body := `{
+		"username": "name"
+	}`
+	Test(t,
+		Description("Successful user addition"),
+		Post(basePath+"/users/add"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusCreated),
+		Expect().Body().JSON().JQ(".userId").Equal(1),
+	)
+}
+
+// HTTP POST: /users/add
+func TestHTTPAddUserNotUniqueName(t *testing.T) {
+	body := `{
+		"username": "name 2"
+	}`
+	Test(t,
+		Description("Failed user addition"),
+		Post(basePath+"/users/add"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusCreated),
+		Expect().Body().JSON().JQ(".userId").Equal(2),
+	)
+
+	Test(t,
+		Description("Failed user addition"),
+		Post(basePath+"/users/add"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusBadRequest),
+	)
+}
+
+// HTTP POST: /users/add
+func TestHTTPAddUserEmptyBody(t *testing.T) {
+	body := `{}`
+	Test(t,
+		Description("Failed user addition"),
+		Post(basePath+"/users/add"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusBadRequest),
+	)
+}
+
+// HTTP POST: /users/add
+func TestHTTPAddUserInvalidRequest(t *testing.T) {
+	body := `{
+	"username": [1, 2, 3]
+}`
+	Test(t,
+		Description("Failed user addition"),
+		Post(basePath+"/users/add"),
+		Send().Headers("Content-Type").Add("application/json"),
+		Send().Body().String(body),
+		Expect().Status().Equal(http.StatusBadRequest),
+	)
 }

@@ -34,8 +34,6 @@ services:
 
   webapp:
     build: .
-    ports:
-      - "127.0.0.1:9000:9000"
     environment:
       DB_HOST: "postgres"
     entrypoint: "/usr/local/bin/app"
