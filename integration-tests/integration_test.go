@@ -12,7 +12,7 @@ import (
 
 const (
 	// Attempts connection
-	host       = "webapp:9000"
+	host       = "localhost:9000"
 	healthPath = "http://" + host + "/health"
 	attempts   = 20
 
@@ -54,30 +54,32 @@ func healthCheck(attempts int) error {
 // HTTP POST: /users/add
 func TestHTTPAddUserSuccess(t *testing.T) {
 	body := `{
-		"username": "name"
+		"username": "name 9"
 	}`
+	var id int
 	Test(t,
 		Description("Successful user addition"),
 		Post(basePath+"/users/add"),
 		Send().Headers("Content-Type").Add("application/json"),
 		Send().Body().String(body),
 		Expect().Status().Equal(http.StatusCreated),
-		Expect().Body().JSON().JQ(".userId").Equal(1),
+		Store().Response().Body().JSON().JQ(".userId").In(&id),
 	)
 }
 
 // HTTP POST: /users/add
 func TestHTTPAddUserNotUniqueName(t *testing.T) {
 	body := `{
-		"username": "name 2"
+		"username": "name 10"
 	}`
+	var id int
 	Test(t,
 		Description("Failed user addition"),
 		Post(basePath+"/users/add"),
 		Send().Headers("Content-Type").Add("application/json"),
 		Send().Body().String(body),
 		Expect().Status().Equal(http.StatusCreated),
-		Expect().Body().JSON().JQ(".userId").Equal(2),
+		Store().Response().Body().JSON().JQ(".userId").In(&id),
 	)
 
 	Test(t,
