@@ -1,9 +1,10 @@
 package config
 
 import (
-	"github.com/ilyakaznacheev/cleanenv"
 	"log"
 	"sync"
+
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Config struct {

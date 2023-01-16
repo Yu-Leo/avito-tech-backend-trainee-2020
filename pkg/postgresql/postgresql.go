@@ -3,11 +3,13 @@ package postgresql
 import (
 	"context"
 	"fmt"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
+	"time"
+
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"time"
+
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 )
 
 type Connection interface {

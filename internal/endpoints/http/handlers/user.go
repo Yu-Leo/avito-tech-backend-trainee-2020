@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"errors"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/models"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/services"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type userRoutes struct {

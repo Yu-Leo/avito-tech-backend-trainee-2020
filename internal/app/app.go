@@ -3,6 +3,12 @@ package app
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/gin-gonic/gin"
+
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoints/http"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/repositories/psql"
@@ -10,10 +16,6 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/httpserver"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
-	"github.com/gin-gonic/gin"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func Run(cfg *config.Config) {
