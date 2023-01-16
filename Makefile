@@ -19,9 +19,17 @@ dev-down: ### Stop and delete all running containers
 	docker-compose -f docker-compose.dev.yaml down
 .PHONY: dev-down
 
-#integration-tests:
-#	docker-compose -f docker-compose.integration.yaml up --build integration
-#.PHONY: integration-tests
+integration-tests:
+	docker-compose -f docker-compose.integration.yaml up -d postgres
+	sleep 2
+	docker-compose -f docker-compose.integration.yaml up init-db
+	sleep 1
+	docker-compose -f docker-compose.integration.yaml up -d webapp
+	sleep 1
+	docker-compose -f docker-compose.integration.yaml up integration-tests
+	sleep 2
+	docker-compose -f docker-compose.integration.yaml down
+.PHONY: integration-tests
 
 init-swag: ### Init OpenAPI Specification files
 	swag init -g internal/endpoints/http/router.go
