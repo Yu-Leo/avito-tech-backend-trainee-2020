@@ -11,7 +11,7 @@ dev-up-postgres: ### Run only Postgres in Docker container
 dev-init-db: ### Init database in Postgres Docker container
 	docker-compose -f docker-compose.dev.yaml up -d postgres
 	sleep 2
-	docker-compose -f docker-compose.dev.yaml up --build init-db
+	docker-compose -f docker-compose.dev.yaml up init-db
 	docker-compose -f docker-compose.dev.yaml down
 .PHONY: dev-init-db
 
@@ -19,15 +19,19 @@ dev-down: ### Stop and delete all running containers
 	docker-compose -f docker-compose.dev.yaml down
 .PHONY: dev-down
 
-integration-tests:
+integration-tests-up:
 	docker-compose -f docker-compose.integration.yaml up -d postgres
 	sleep 2
 	docker-compose -f docker-compose.integration.yaml up init-db
 	sleep 1
 	docker-compose -f docker-compose.integration.yaml up -d webapp
 	sleep 1
-	docker-compose -f docker-compose.integration.yaml up integration-tests
+	docker-compose -f docker-compose.integration.yaml up --build integration-tests
 	sleep 2
+	docker-compose -f docker-compose.integration.yaml down
+.PHONY: integration-tests-up
+
+integration-tests-forced-down:
 	docker-compose -f docker-compose.integration.yaml down
 .PHONY: integration-tests
 
