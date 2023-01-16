@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/app"
-	"log"
 )
 
 func main() {

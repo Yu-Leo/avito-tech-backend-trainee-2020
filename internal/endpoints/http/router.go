@@ -1,13 +1,15 @@
 package http
 
 import (
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoints/http/handlers"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/services"
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"net/http"
+
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/endpoints/http/handlers"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/services"
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/logger"
 
 	_ "github.com/Yu-Leo/avito-tech-backend-trainee-2020/docs"
 )
