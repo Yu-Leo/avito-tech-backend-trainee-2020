@@ -14,18 +14,16 @@ const (
 	createUserUrl = basePath + "/users/add"
 )
 
-type CreateUserRequest struct {
+type CreateUserResponse struct {
 	Id int `json:"userId"`
 }
 
-type CreateUserResponse struct {
+type CreateUserRequest struct {
 	Username string `json:"username" binding:"required"`
 }
 
-// HTTP POST: /users/add
-
-func newRequest(username string) (*http.Request, error) {
-	user := CreateUserResponse{
+func createUserRequest(username string) (*http.Request, error) {
+	user := CreateUserRequest{
 		Username: username,
 	}
 	result, _ := json.Marshal(user)
@@ -36,7 +34,7 @@ func newRequest(username string) (*http.Request, error) {
 
 func TestAddUserSuccess(t *testing.T) {
 	// Arrange
-	req, err := newRequest("user 1")
+	req, err := createUserRequest("user 1")
 	assert.Nil(t, err)
 	client := &http.Client{}
 
@@ -48,15 +46,15 @@ func TestAddUserSuccess(t *testing.T) {
 	// Assert
 	assert.Equal(t, http.StatusCreated, res.StatusCode)
 	body, _ := io.ReadAll(res.Body)
-	var userId CreateUserRequest
+	var userId CreateUserResponse
 	err = json.Unmarshal(body, &userId)
 	assert.GreaterOrEqual(t, userId.Id, 1)
 }
 
 func TestAddUserNotUniqueName(t *testing.T) {
 	// Arrange
-	req1, err := newRequest("user 2")
-	req2, err := newRequest("user 2")
+	req1, err := createUserRequest("user 2")
+	req2, err := createUserRequest("user 2")
 
 	assert.Nil(t, err)
 	client := &http.Client{}
