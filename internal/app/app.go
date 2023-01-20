@@ -42,6 +42,10 @@ func Run(cfg *config.Config) {
 	chatService := services.NewChatService(chatRepository)
 	messageService := services.NewMessageService(messageRepository)
 
+	if cfg.Server.Mode == gin.ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	ginEngine := gin.Default()
 	rest.NewRouter(ginEngine, l, userService, chatService, messageService)
 	httpServer := httpserver.New(ginEngine, cfg.Server.Host, cfg.Server.Port)
