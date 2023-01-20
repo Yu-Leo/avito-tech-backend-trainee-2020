@@ -1,4 +1,4 @@
-package integration_tests
+package end_to_end_tests
 
 import (
 	"bytes"
@@ -10,13 +10,9 @@ import (
 )
 
 const (
-	// Attempts connection
 	host       = "webapp:9000"
-	healthPath = "http://" + host + "/health"
-	attempts   = 20
-
-	// HTTP REST
-	basePath = "http://" + host
+	basePath   = "http://" + host
+	healthPath = basePath + "/health"
 )
 
 func TestMain(m *testing.M) {
