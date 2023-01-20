@@ -61,9 +61,9 @@ func healthCheck() error {
 }
 
 func getUniqueUserName() string {
-	return "user-" + time.Now().Format("15:04:05.999999999")
+	return "user-" + time.Now().Format(time.RFC3339Nano)
 }
 
 func getUniqueChatName() string {
-	return "chat-" + time.Now().Format("15:04:05.999999999")
+	return "chat-" + time.Now().Format(time.RFC3339Nano)
 }
