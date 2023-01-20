@@ -54,6 +54,12 @@ A message in the chat. It has the following properties:
 - **text** *string* - the text of the sent message
 - **created_at** *datetime* - message creation time
 
+### :blue_book: Database schema
+
+![Database schema](./docs/database-schema.jpg)
+
+Original: [database-schema.drawio](./docs/database-schema.drawio)
+
 <a id="chapter-1"></a>
 
 ## :pushpin: API
@@ -106,9 +112,7 @@ Parameter values are set in the [`config/config.yaml`](./config/config.yaml) and
 
 ### Tests
 
-- [ ] Unit tests (?)
-
-- [ ] Integration tests
+- [ ] End-to-end tests
 
 <a id="chapter-4"></a>
 
