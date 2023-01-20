@@ -1,4 +1,4 @@
-package integration_tests
+package end_to_end_tests
 
 import (
 	"bytes"

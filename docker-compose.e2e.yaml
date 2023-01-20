@@ -25,10 +25,10 @@ services:
     depends_on:
       - postgres
 
-  integration-tests:
+  end-to-end-tests:
     build:
       context: .
-      dockerfile: integration-tests/Dockerfile
+      dockerfile: end-to-end-tests/Dockerfile
     depends_on:
       - webapp
 
