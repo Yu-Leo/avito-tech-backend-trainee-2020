@@ -52,7 +52,7 @@ func (r *userRoutes) CreateUser(c *gin.Context) {
 
 	newUserId, err := r.userService.CreateUser(userDTO)
 	if err != nil {
-		if errors.Is(err, apperror.UsernameAlreadyExists) {
+		if errors.Is(err, apperror.UsernameAlreadyExists) || errors.Is(err, apperror.TooLongName) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
 			return
 		}
