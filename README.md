@@ -13,7 +13,7 @@
 
 * [Project description](#chapter-0)
 * [API](#chapter-1)
-* [Getting started](#chapter-2)
+* [Quick start](#chapter-2)
 * [Source code](#chapter-3)
 * [License](#chapter-4)
 
@@ -54,7 +54,7 @@ A message in the chat. It has the following properties:
 - **text** *string* - the text of the sent message
 - **created_at** *datetime* - message creation time
 
-### :blue_book: Database schema
+### Database schema
 
 ![Database schema](./docs/database-schema.jpg)
 
@@ -80,7 +80,7 @@ at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/in
 
 <a id="chapter-2"></a>
 
-## :hammer: Getting started
+## :zap: Quick start
 
 - [ ] Make commands
 
