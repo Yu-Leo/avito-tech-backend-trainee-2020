@@ -23,7 +23,7 @@ func Run(cfg *config.Config) {
 
 	l.Info("Run application")
 
-	postgresConnection, err := postgresql.NewConnection(context.TODO(), 2, cfg.Storage)
+	postgresConnection, err := postgresql.NewConnection(context.Background(), 2, cfg.Storage)
 	if err != nil {
 		l.Fatal(err.Error())
 	}
