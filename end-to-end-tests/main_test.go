@@ -7,12 +7,25 @@ import (
 	"net/http"
 	"os"
 	"testing"
+	"time"
 )
 
 const (
+	// Server
 	host       = "webapp:9000"
 	basePath   = "http://" + host
 	healthPath = basePath + "/health"
+
+	// Users
+	createUserUrl = basePath + "/users/add"
+
+	// Chats
+	createChatUrl = basePath + "/chats/add"
+	getChatsUrl   = basePath + "/chats/get"
+
+	// Messages
+	createMessageUrl = basePath + "/messages/add"
+	getMessagesUrl   = basePath + "/messages/get"
 )
 
 func TestMain(m *testing.M) {
@@ -45,4 +58,12 @@ func healthCheck() error {
 		return nil
 	}
 	return errors.New("status code != 200 OK")
+}
+
+func getUniqueUserName() string {
+	return "user-" + time.Now().Format("15:04:05.999999999")
+}
+
+func getUniqueChatName() string {
+	return "chat-" + time.Now().Format("15:04:05.999999999")
 }

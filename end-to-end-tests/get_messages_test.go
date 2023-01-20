@@ -7,26 +7,9 @@ import (
 	"io"
 	"net/http"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
-
-const (
-	getMessagesUrl = basePath + "/messages/get"
-)
-
-type GetChatMessagesRequest struct {
-	ChatId int `json:"chat" binding:"required"`
-}
-
-type GetChatMessagesResponse struct {
-	Id        int       `json:"id"`
-	ChatId    int       `json:"chat"`
-	UserId    int       `json:"author"`
-	Text      string    `json:"text"`
-	CreatedAt time.Time `json:"createdAt"`
-}
 
 func getMessagesRequest(chatId int) (*http.Request, error) {
 	message := GetChatMessagesRequest{
@@ -65,11 +48,11 @@ func createMessage(userId, chatId int, text string) (int, error) {
 
 func TestGetChatMessagesSuccess(t *testing.T) {
 	// Arrange
-	userId, err := createUser("user 11")
+	userId, err := createUser(getUniqueUserName())
 	assert.Nil(t, err)
 	users := make([]int, 1)
 	users[0] = userId
-	chatId, err := createChat("chat 8", users)
+	chatId, err := createChat(getUniqueChatName(), users)
 	messageId, err := createMessage(userId, chatId, "text")
 
 	req, err := getMessagesRequest(chatId)

@@ -10,18 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const (
-	createUserUrl = basePath + "/users/add"
-)
-
-type CreateUserResponse struct {
-	Id int `json:"userId"`
-}
-
-type CreateUserRequest struct {
-	Username string `json:"username" binding:"required"`
-}
-
 func createUserRequest(username string) (*http.Request, error) {
 	user := CreateUserRequest{
 		Username: username,
@@ -32,11 +20,12 @@ func createUserRequest(username string) (*http.Request, error) {
 	return req, err
 }
 
-func TestAddUserSuccess(t *testing.T) {
+func TestCreateUserSuccess(t *testing.T) {
 	// Arrange
-	req, err := createUserRequest("user 1")
-	assert.Nil(t, err)
 	client := &http.Client{}
+
+	req, err := createUserRequest(getUniqueUserName())
+	assert.Nil(t, err)
 
 	// Act
 	res, err := client.Do(req)
@@ -51,13 +40,15 @@ func TestAddUserSuccess(t *testing.T) {
 	assert.GreaterOrEqual(t, userId.Id, 1)
 }
 
-func TestAddUserNotUniqueName(t *testing.T) {
+func TestCreateUserNotUniqueName(t *testing.T) {
 	// Arrange
-	req1, err := createUserRequest("user 2")
-	req2, err := createUserRequest("user 2")
-
-	assert.Nil(t, err)
 	client := &http.Client{}
+
+	username := getUniqueUserName()
+	req1, err := createUserRequest(username)
+	assert.Nil(t, err)
+	req2, err := createUserRequest(username)
+	assert.Nil(t, err)
 
 	// Act
 	res1, err := client.Do(req1)
@@ -73,12 +64,13 @@ func TestAddUserNotUniqueName(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res2.StatusCode)
 }
 
-func TestAddUserEmptyBody(t *testing.T) {
+func TestCreateUserEmptyBody(t *testing.T) {
 	// Arrange
+	client := &http.Client{}
+
 	req, err := http.NewRequest("POST", createUserUrl, bytes.NewBuffer([]byte("{}")))
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	assert.Nil(t, err)
-	client := &http.Client{}
 
 	// Act
 	res, err := client.Do(req)
@@ -89,13 +81,14 @@ func TestAddUserEmptyBody(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestAddUserInvalidRequest(t *testing.T) {
+func TestCreateUserInvalidRequest(t *testing.T) {
 	// Arrange
+	client := &http.Client{}
+
 	body := []byte(`"username": [1, 2, 3]`)
 	req, err := http.NewRequest("POST", createUserUrl, bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	assert.Nil(t, err)
-	client := &http.Client{}
 
 	// Act
 	res, err := client.Do(req)

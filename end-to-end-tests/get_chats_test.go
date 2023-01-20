@@ -7,25 +7,9 @@ import (
 	"io"
 	"net/http"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
-
-const (
-	getChatsUrl = basePath + "/chats/get"
-)
-
-type GetUserChatsRequest struct {
-	User int `json:"user" binding:"required"`
-}
-
-type GetUserChatsResponse struct {
-	Id        int       `json:"id"`
-	Name      string    `json:"name"`
-	Users     []int     `json:"users"`
-	CreatedAt time.Time `json:"createdAt"`
-}
 
 func getChatsRequest(user int) (*http.Request, error) {
 	chat := GetUserChatsRequest{
@@ -37,13 +21,40 @@ func getChatsRequest(user int) (*http.Request, error) {
 	return req, err
 }
 
+func createUser(username string) (int, error) {
+	// Arrange
+	client := &http.Client{}
+
+	req, err := createUserRequest(username)
+	if err != nil {
+		return 0, err
+	}
+
+	// Act
+	res, err := client.Do(req)
+	if err != nil {
+		return 0, err
+	}
+	defer res.Body.Close()
+
+	// Assert
+	if res.StatusCode != http.StatusCreated {
+		return 0, errors.New("invalid status code")
+	}
+	body, _ := io.ReadAll(res.Body)
+	var userId CreateUserResponse
+	err = json.Unmarshal(body, &userId)
+	return userId.Id, nil
+}
+
 func createChat(name string, users []int) (int, error) {
 	// Arrange
+	client := &http.Client{}
+
 	req, err := createChatRequest(name, users)
 	if err != nil {
 		return 0, err
 	}
-	client := &http.Client{}
 
 	// Act
 	res, err := client.Do(req)
@@ -64,14 +75,17 @@ func createChat(name string, users []int) (int, error) {
 
 func TestGetUserChatsSuccess(t *testing.T) {
 	// Arrange
-	userId, err := createUser("user 4")
+	client := &http.Client{}
+
+	userId, err := createUser(getUniqueUserName())
 	assert.Nil(t, err)
 	users := make([]int, 1)
 	users[0] = userId
-	chatId, err := createChat("chat 4", users)
+	chatName := getUniqueChatName()
+	chatId, err := createChat(chatName, users)
+	assert.Nil(t, err)
 	req, err := getChatsRequest(userId)
 	assert.Nil(t, err)
-	client := &http.Client{}
 
 	// Act
 	res, err := client.Do(req)
@@ -85,14 +99,15 @@ func TestGetUserChatsSuccess(t *testing.T) {
 	err = json.Unmarshal(body, &userChats)
 	assert.Equal(t, len(userChats), 1)
 	assert.Equal(t, userChats[0].Id, chatId)
-	assert.Equal(t, userChats[0].Name, "chat 4")
+	assert.Equal(t, userChats[0].Name, chatName)
 }
 
 func TestGetUserChatsWithNotExistsUser(t *testing.T) {
 	// Arrange
+	client := &http.Client{}
+
 	req, err := getChatsRequest(999)
 	assert.Nil(t, err)
-	client := &http.Client{}
 
 	// Act
 	res, err := client.Do(req)
@@ -105,10 +120,11 @@ func TestGetUserChatsWithNotExistsUser(t *testing.T) {
 
 func TestGetUserChatsWithEmptyBody(t *testing.T) {
 	// Arrange
+	client := &http.Client{}
+
 	req, err := http.NewRequest("POST", getChatsUrl, bytes.NewBuffer([]byte("{}")))
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	assert.Nil(t, err)
-	client := &http.Client{}
 
 	// Act
 	res, err := client.Do(req)
