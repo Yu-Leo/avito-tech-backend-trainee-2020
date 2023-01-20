@@ -20,6 +20,10 @@ var (
 	UserIsNotInChat = NewAppError(
 		"The author of the message is not a member of the chat",
 		"")
+
+	TooLongName = NewAppError(
+		"The name must be shorter than 80 characters",
+		"")
 )
 
 type ErrorJSON struct {
