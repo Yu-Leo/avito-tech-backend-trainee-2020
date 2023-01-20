@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS messages;
 CREATE TABLE users
 (
     id         serial UNIQUE,
-    username   varchar(30) UNIQUE NOT NULL,
+    username   varchar(80) UNIQUE NOT NULL,
     created_at timestamp          NOT NULL DEFAULT now(),
     PRIMARY KEY (id)
 );
@@ -15,7 +15,7 @@ CREATE TABLE users
 CREATE TABLE chats
 (
     id         serial UNIQUE,
-    name       varchar(30) UNIQUE NOT NULL,
+    name       varchar(80) UNIQUE NOT NULL,
     created_at timestamp          NOT NULL DEFAULT now(),
     PRIMARY KEY (id)
 );
