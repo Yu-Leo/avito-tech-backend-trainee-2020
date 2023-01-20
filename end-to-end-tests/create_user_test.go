@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -62,6 +63,22 @@ func TestCreateUserNotUniqueName(t *testing.T) {
 	// Assert
 	assert.Equal(t, http.StatusCreated, res1.StatusCode)
 	assert.Equal(t, http.StatusBadRequest, res2.StatusCode)
+}
+
+func TestCreateUserWithTooLongName(t *testing.T) {
+	// Arrange
+	client := &http.Client{}
+
+	req, err := createUserRequest(strings.Repeat("#", 100))
+	assert.Nil(t, err)
+
+	// Act
+	res, err := client.Do(req)
+	assert.Nil(t, err)
+	defer res.Body.Close()
+
+	// Assert
+	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
 func TestCreateUserEmptyBody(t *testing.T) {
