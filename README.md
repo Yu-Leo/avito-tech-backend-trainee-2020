@@ -112,7 +112,12 @@ Parameter values are set in the [`config/config.yaml`](./config/config.yaml) and
 
 ### Tests
 
-- [ ] End-to-end tests
+Written end-to-end tests check the interaction with the service via the [API](#chapter-1).
+
+**Run** End-to-end tests:
+```bash
+make end-to-end-tests-up
+```
 
 <a id="chapter-4"></a>
 
