@@ -44,7 +44,7 @@ func Run(cfg *config.Config) {
 
 	ginEngine := gin.Default()
 	rest.NewRouter(ginEngine, l, userService, chatService, messageService)
-	httpServer := httpserver.New(ginEngine, httpserver.HostPort(cfg.Server.Host, cfg.Server.Port))
+	httpServer := httpserver.New(ginEngine, cfg.Server.Host, cfg.Server.Port)
 	l.Info(fmt.Sprintf("Run server on %s:%d", cfg.Server.Host, cfg.Server.Port))
 
 	interrupt := make(chan os.Signal, 1)
