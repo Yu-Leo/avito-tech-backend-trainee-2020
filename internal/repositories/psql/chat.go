@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/internal/apperror"
@@ -24,7 +25,6 @@ func NewPostgresChatRepository(pc postgresql.Connection) repositories.ChatReposi
 }
 
 func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatRequest) (chatId *models.ChatId, err error) {
-	var pgErr *pgconn.PgError
 	chatId = &models.ChatId{}
 
 	transaction, err := cr.postgresConnection.Begin(context.Background())
@@ -33,39 +33,56 @@ func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatRequ
 	}
 	defer transaction.Rollback(context.Background())
 
-	q1 := `
-INSERT INTO chats (name)
-VALUES ($1)
-RETURNING chats.id;
-				`
-	err = transaction.QueryRow(ctx, q1, chat.Name).Scan(&(*chatId).Id)
+	chatId.Id, err = createChat(transaction, ctx, chat.Name)
 	if err != nil {
-		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
-			return nil, apperror.ChatNameAlreadyExists
-		}
 		return nil, err
 	}
-	q2 := `
-INSERT INTO users_chats (user_id, chat_id)
-VALUES ($1, $2);
-				`
-	for _, userID := range chat.Users {
-		_, err = transaction.Exec(ctx, q2, userID, chatId.Id)
 
-		if err != nil {
-			if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
-				return nil, apperror.IDNotFound
-			}
-			return nil, err
-		}
-
+	err = addUsersToChat(transaction, ctx, chatId.Id, chat.Users)
+	if err != nil {
+		return nil, err
 	}
+
 	err = transaction.Commit(context.Background())
 	if err != nil {
 		return nil, err
 	}
 
 	return chatId, nil
+}
+
+func createChat(transaction pgx.Tx, ctx context.Context, chatName string) (chatId int, err error) {
+	var pgErr *pgconn.PgError
+	q := `
+INSERT INTO chats (name)
+VALUES ($1)
+RETURNING chats.id;`
+	err = transaction.QueryRow(ctx, q, chatName).Scan(&chatId)
+	if err != nil {
+		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {
+			return 0, apperror.ChatNameAlreadyExists
+		}
+		return 0, err
+	}
+	return chatId, nil
+}
+
+func addUsersToChat(transaction pgx.Tx, ctx context.Context, chatId int, chatUsers []int) (err error) {
+	var pgErr *pgconn.PgError
+	q := `
+INSERT INTO users_chats (user_id, chat_id)
+VALUES ($1, $2);`
+	for _, userID := range chatUsers {
+		_, err = transaction.Exec(ctx, q, userID, chatId)
+
+		if err != nil {
+			if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
+				return apperror.IDNotFound
+			}
+			return err
+		}
+	}
+	return nil
 }
 
 func (cr *chatRepository) GetUserChats(ctx context.Context, chat models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
@@ -75,8 +92,27 @@ func (cr *chatRepository) GetUserChats(ctx context.Context, chat models.GetUserC
 	}
 	defer transaction.Rollback(context.Background())
 
+	userChats, err := getUserChatsWithoutUsersList(transaction, ctx, chat.User)
+	if err != nil {
+		return nil, err
+	}
+
+	err = addUsersListForChats(transaction, ctx, userChats)
+	if err != nil {
+		return nil, err
+	}
+
+	err = transaction.Commit(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	return userChats, nil
+}
+
+func getUserChatsWithoutUsersList(transaction pgx.Tx, ctx context.Context, userId int) (*[]models.GetUserChatsResponse, error) {
 	answer := make([]models.GetUserChatsResponse, 0)
-	q1 := `
+	q := `
 SELECT chats.id, chats.name, chats.created_at
 FROM users_chats
 JOIN chats on users_chats.chat_id = chats.id
@@ -86,7 +122,7 @@ ORDER BY (SELECT (MAX(created_at))
           WHERE chat_id = users_chats.chat_id
           GROUP BY chat_id) DESC;
 `
-	rows, err := transaction.Query(ctx, q1, chat.User)
+	rows, err := transaction.Query(ctx, q, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -99,32 +135,29 @@ ORDER BY (SELECT (MAX(created_at))
 		answer = append(answer, userChat)
 	}
 	rows.Close()
+	return &answer, nil
+}
 
-	for i := range answer {
-		q2 := `
+func addUsersListForChats(transaction pgx.Tx, ctx context.Context, chats *[]models.GetUserChatsResponse) error {
+	for i := range *chats {
+		q := `
 SELECT users_chats.user_id
 FROM users_chats
 WHERE users_chats.chat_id = $1;
 `
-		chatUsers, err := transaction.Query(ctx, q2, answer[i].Id)
+		rows, err := transaction.Query(ctx, q, (*chats)[i].Id)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		for chatUsers.Next() {
+		for rows.Next() {
 			var userId int
-			err = chatUsers.Scan(&userId)
+			err = rows.Scan(&userId)
 			if err != nil {
-				return nil, err
+				return err
 			}
-			answer[i].Users = append(answer[i].Users, userId)
+			(*chats)[i].Users = append((*chats)[i].Users, userId)
 		}
+		rows.Close()
 	}
-	rows.Close()
-
-	err = transaction.Commit(context.Background())
-	if err != nil {
-		return nil, err
-	}
-
-	return &answer, nil
+	return nil
 }
