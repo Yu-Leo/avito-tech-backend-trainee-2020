@@ -23,7 +23,7 @@ func NewPostgresUserRepository(pc postgresql.Connection) repositories.UserReposi
 	}
 }
 
-func (ur *userRepository) Create(ctx context.Context, user models.CreateUserDTO) (userId *models.UserId, err error) {
+func (ur *userRepository) Create(ctx context.Context, user models.CreateUserRequest) (userId *models.UserId, err error) {
 	userId = &models.UserId{}
 
 	q := `

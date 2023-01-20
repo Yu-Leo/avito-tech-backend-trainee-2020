@@ -9,22 +9,24 @@ type Chat struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-type CreateChatDTO struct {
+type CreateChatRequest struct {
 	Name  string `json:"name" binding:"required"`
 	Users []int  `json:"users" binding:"required"`
 }
 
-type GetUserChatsDTORequest struct {
+type ChatId struct {
+	Id int `json:"chatId"`
+}
+
+type GetUserChatsRequest struct {
 	User int `json:"user" binding:"required"`
 }
 
-type GetUserChatsDTOResponse struct {
+type GetUserChatsResponse struct {
 	Id        int       `json:"id"`
 	Name      string    `json:"name"`
 	Users     []int     `json:"users"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-type ChatId struct {
-	Id int `json:"chatId"`
-}
+

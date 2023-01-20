@@ -10,13 +10,13 @@ type Message struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-type CreateMessageDTO struct {
+type CreateMessageRequest struct {
 	ChatId int    `json:"chat" binding:"required"`
 	UserId int    `json:"author" binding:"required"`
 	Text   string `json:"text" binding:"required"`
 }
 
-type GetChatMessagesDRORequest struct {
+type GetChatMessagesRequest struct {
 	ChatId int `json:"chat" binding:"required"`
 }
 

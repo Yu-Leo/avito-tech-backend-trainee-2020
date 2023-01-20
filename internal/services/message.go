@@ -17,10 +17,10 @@ func NewMessageService(messageRepository repositories.MessageRepository) *Messag
 	}
 }
 
-func (s MessageService) CreateMessage(message models.CreateMessageDTO) (*models.MessageId, error) {
+func (s MessageService) CreateMessage(message models.CreateMessageRequest) (*models.MessageId, error) {
 	return s.repository.Create(context.Background(), message)
 }
 
-func (s MessageService) GetChatMessages(chat models.GetChatMessagesDRORequest) (*[]models.Message, error) {
+func (s MessageService) GetChatMessages(chat models.GetChatMessagesRequest) (*[]models.Message, error) {
 	return s.repository.GetChatMessages(context.Background(), chat)
 }

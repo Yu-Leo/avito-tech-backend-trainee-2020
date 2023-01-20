@@ -17,10 +17,10 @@ func NewChatService(chatRepository repositories.ChatRepository) *ChatService {
 	}
 }
 
-func (s ChatService) CreateChat(chat models.CreateChatDTO) (*models.ChatId, error) {
+func (s ChatService) CreateChat(chat models.CreateChatRequest) (*models.ChatId, error) {
 	return s.repository.Create(context.Background(), chat)
 }
 
-func (s ChatService) GetUserChats(chat models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOResponse, error) {
+func (s ChatService) GetUserChats(chat models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
 	return s.repository.GetUserChats(context.Background(), chat)
 }
