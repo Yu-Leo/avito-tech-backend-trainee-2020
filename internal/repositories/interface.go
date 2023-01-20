@@ -13,7 +13,7 @@ type MessageRepository interface {
 
 type ChatRepository interface {
 	Create(context.Context, models.CreateChatDTO) (*models.ChatId, error)
-	GetUserChats(context.Context, models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOAnswer, error)
+	GetUserChats(context.Context, models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOResponse, error)
 }
 
 type UserRepository interface {

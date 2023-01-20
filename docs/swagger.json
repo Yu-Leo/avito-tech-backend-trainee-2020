@@ -89,7 +89,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.GetUserChatsDTOAnswer"
+                                "$ref": "#/definitions/models.GetUserChatsDTOResponse"
                             }
                         }
                     },
@@ -329,7 +329,7 @@
                 }
             }
         },
-        "models.GetUserChatsDTOAnswer": {
+        "models.GetUserChatsDTOResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {

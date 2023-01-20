@@ -49,7 +49,7 @@ definitions:
     required:
     - chat
     type: object
-  models.GetUserChatsDTOAnswer:
+  models.GetUserChatsDTOResponse:
     properties:
       createdAt:
         type: string
@@ -151,7 +151,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.GetUserChatsDTOAnswer'
+              $ref: '#/definitions/models.GetUserChatsDTOResponse'
             type: array
         "400":
           description: Bad Request
