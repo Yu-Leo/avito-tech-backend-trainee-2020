@@ -7,29 +7,36 @@ import (
 	"net/http"
 	"testing"
 
-	. "github.com/Eun/go-hit"
 	"github.com/stretchr/testify/assert"
 )
 
-type UserId struct {
+const (
+	createUserUrl = basePath + "/users/add"
+)
+
+type CreateUserRequest struct {
 	Id int `json:"userId"`
 }
 
-type CreateUserDTO struct {
+type CreateUserResponse struct {
 	Username string `json:"username" binding:"required"`
 }
 
 // HTTP POST: /users/add
 
+func newRequest(username string) (*http.Request, error) {
+	user := CreateUserResponse{
+		Username: username,
+	}
+	result, _ := json.Marshal(user)
+	req, err := http.NewRequest("POST", createUserUrl, bytes.NewBuffer(result))
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	return req, err
+}
+
 func TestAddUserSuccess(t *testing.T) {
 	// Arrange
-	url := basePath + "/users/add"
-	createUser := CreateUserDTO{
-		Username: "name 1",
-	}
-	result, _ := json.Marshal(createUser)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(result))
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req, err := newRequest("user 1")
 	assert.Nil(t, err)
 	client := &http.Client{}
 
@@ -41,54 +48,62 @@ func TestAddUserSuccess(t *testing.T) {
 	// Assert
 	assert.Equal(t, http.StatusCreated, res.StatusCode)
 	body, _ := io.ReadAll(res.Body)
-	var userId UserId
+	var userId CreateUserRequest
 	err = json.Unmarshal(body, &userId)
 	assert.GreaterOrEqual(t, userId.Id, 1)
 }
 
 func TestAddUserNotUniqueName(t *testing.T) {
-	body := `{
-		"username": "name 10"
-	}`
-	var id int
-	Test(t,
-		Description("Failed user addition"),
-		Post(basePath+"/users/add"),
-		Send().Headers("Content-Type").Add("application/json"),
-		Send().Body().String(body),
-		Expect().Status().Equal(http.StatusCreated),
-		Store().Response().Body().JSON().JQ(".userId").In(&id),
-	)
+	// Arrange
+	req1, err := newRequest("user 2")
+	req2, err := newRequest("user 2")
 
-	Test(t,
-		Description("Failed user addition"),
-		Post(basePath+"/users/add"),
-		Send().Headers("Content-Type").Add("application/json"),
-		Send().Body().String(body),
-		Expect().Status().Equal(http.StatusBadRequest),
-	)
+	assert.Nil(t, err)
+	client := &http.Client{}
+
+	// Act
+	res1, err := client.Do(req1)
+	assert.Nil(t, err)
+	defer res1.Body.Close()
+
+	res2, err := client.Do(req2)
+	assert.Nil(t, err)
+	defer res2.Body.Close()
+
+	// Assert
+	assert.Equal(t, http.StatusCreated, res1.StatusCode)
+	assert.Equal(t, http.StatusBadRequest, res2.StatusCode)
 }
 
 func TestAddUserEmptyBody(t *testing.T) {
-	body := `{}`
-	Test(t,
-		Description("Failed user addition"),
-		Post(basePath+"/users/add"),
-		Send().Headers("Content-Type").Add("application/json"),
-		Send().Body().String(body),
-		Expect().Status().Equal(http.StatusBadRequest),
-	)
+	// Arrange
+	req, err := http.NewRequest("POST", createUserUrl, bytes.NewBuffer([]byte("{}")))
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	assert.Nil(t, err)
+	client := &http.Client{}
+
+	// Act
+	res, err := client.Do(req)
+	assert.Nil(t, err)
+	defer res.Body.Close()
+
+	// Assert
+	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
 func TestAddUserInvalidRequest(t *testing.T) {
-	body := `{
-	"username": [1, 2, 3]
-}`
-	Test(t,
-		Description("Failed user addition"),
-		Post(basePath+"/users/add"),
-		Send().Headers("Content-Type").Add("application/json"),
-		Send().Body().String(body),
-		Expect().Status().Equal(http.StatusBadRequest),
-	)
+	// Arrange
+	body := []byte(`"username": [1, 2, 3]`)
+	req, err := http.NewRequest("POST", createUserUrl, bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	assert.Nil(t, err)
+	client := &http.Client{}
+
+	// Act
+	res, err := client.Do(req)
+	assert.Nil(t, err)
+	defer res.Body.Close()
+
+	// Assert
+	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
