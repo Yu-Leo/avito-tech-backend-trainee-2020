@@ -1,4 +1,11 @@
-# Dev mode
+# Documentation
+
+init-swag: ### Init OpenAPI Specification files
+	swag init -g internal/endpoints/http/router.go
+.PHONY: init-swag
+
+
+# Developer mode
 
 dev-up-all: ### Run Postgres and webapp services in Docker containers
 	docker-compose -f docker-compose.dev.yaml up --build -d postgres webapp
@@ -19,6 +26,9 @@ dev-down: ### Stop and delete all running containers
 	docker-compose -f docker-compose.dev.yaml down
 .PHONY: dev-down
 
+
+# End-to-end tests
+
 end-to-end-tests-up:
 	docker-compose -f docker-compose.e2e.yaml up -d postgres
 	sleep 2
@@ -29,12 +39,8 @@ end-to-end-tests-up:
 	docker-compose -f docker-compose.e2e.yaml up --build end-to-end-tests
 	sleep 2
 	docker-compose -f docker-compose.e2e.yaml down
-.PHONY: e2e-tests-up
+.PHONY: end-to-end-tests-up
 
 end-to-end-tests-forced-down:
 	docker-compose -f docker-compose.e2e.yaml down
-.PHONY: e2e-tests
-
-init-swag: ### Init OpenAPI Specification files
-	swag init -g internal/endpoints/http/router.go
-.PHONY: init-swag
+.PHONY: end-to-end-tests-forced-down
