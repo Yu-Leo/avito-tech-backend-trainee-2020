@@ -97,7 +97,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.GetUserChatsDTOAnswer"
+                                "$ref": "#/definitions/models.GetUserChatsDTOResponse"
                             }
                         }
                     },
@@ -337,7 +337,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.GetUserChatsDTOAnswer": {
+        "models.GetUserChatsDTOResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {

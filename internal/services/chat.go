@@ -21,6 +21,6 @@ func (s ChatService) CreateChat(chat models.CreateChatDTO) (*models.ChatId, erro
 	return s.repository.Create(context.Background(), chat)
 }
 
-func (s ChatService) GetUserChats(chat models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOAnswer, error) {
+func (s ChatService) GetUserChats(chat models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOResponse, error) {
 	return s.repository.GetUserChats(context.Background(), chat)
 }

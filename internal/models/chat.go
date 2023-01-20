@@ -18,7 +18,7 @@ type GetUserChatsDTORequest struct {
 	User int `json:"user" binding:"required"`
 }
 
-type GetUserChatsDTOAnswer struct {
+type GetUserChatsDTOResponse struct {
 	Id        int       `json:"id"`
 	Name      string    `json:"name"`
 	Users     []int     `json:"users"`

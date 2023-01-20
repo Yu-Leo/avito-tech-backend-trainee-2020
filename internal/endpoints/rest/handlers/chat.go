@@ -72,7 +72,7 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 // @Accept      json
 // @Produce     json
 // @Param getUserChatsObject body models.GetUserChatsDTORequest true "Parameters for getting user chats."
-// @Success     200 {array} models.GetUserChatsDTOAnswer
+// @Success     200 {array} models.GetUserChatsDTOResponse
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /chats/get [post]
@@ -85,7 +85,7 @@ func (r *chatRoutes) GetUserChats(c *gin.Context) {
 		return
 	}
 
-	userChatsDTOAnswer, err := r.chatService.GetUserChats(userChatsDTORequest)
+	userChatsDTOResponse, err := r.chatService.GetUserChats(userChatsDTORequest)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
@@ -96,5 +96,5 @@ func (r *chatRoutes) GetUserChats(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, *userChatsDTOAnswer)
+	c.JSON(http.StatusOK, *userChatsDTOResponse)
 }
