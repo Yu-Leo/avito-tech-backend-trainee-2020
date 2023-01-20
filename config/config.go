@@ -22,6 +22,7 @@ type AppConfig struct {
 type ServerConfig struct {
 	Host string `env-required:"true" yaml:"host" env:"APP_HOST"`
 	Port int    `env-required:"true" yaml:"port" env:"APP_PORT"`
+	Mode string `yaml:"mode" env:"APP_MODE"` // "debug" or "release"
 }
 
 type LoggerConfig struct {
