@@ -37,13 +37,13 @@ func NewChatRoutes(handler *gin.RouterGroup, chatService *services.ChatService, 
 // @Tags  	    chat
 // @Accept      json
 // @Produce     json
-// @Param createChatObject body models.CreateChatDTO true "Parameters for creating a chat."
+// @Param createChatObject body models.CreateChatRequest true "Parameters for creating a chat."
 // @Success     201 {object} models.ChatId
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /chats/add [post]
 func (r *chatRoutes) CreateChat(c *gin.Context) {
-	chatDTO := models.CreateChatDTO{}
+	chatDTO := models.CreateChatRequest{}
 
 	err := c.BindJSON(&chatDTO)
 	if err != nil {
@@ -71,13 +71,13 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 // @Tags  	    chat
 // @Accept      json
 // @Produce     json
-// @Param getUserChatsObject body models.GetUserChatsDTORequest true "Parameters for getting user chats."
-// @Success     200 {array} models.GetUserChatsDTOResponse
+// @Param getUserChatsObject body models.GetUserChatsRequest true "Parameters for getting user chats."
+// @Success     200 {array} models.GetUserChatsResponse
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /chats/get [post]
 func (r *chatRoutes) GetUserChats(c *gin.Context) {
-	userChatsDTORequest := models.GetUserChatsDTORequest{}
+	userChatsDTORequest := models.GetUserChatsRequest{}
 
 	err := c.BindJSON(&userChatsDTORequest)
 	if err != nil {

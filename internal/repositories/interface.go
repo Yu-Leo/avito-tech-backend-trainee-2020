@@ -7,15 +7,15 @@ import (
 )
 
 type MessageRepository interface {
-	Create(context.Context, models.CreateMessageDTO) (*models.MessageId, error)
-	GetChatMessages(context.Context, models.GetChatMessagesDRORequest) (*[]models.Message, error)
+	Create(context.Context, models.CreateMessageRequest) (*models.MessageId, error)
+	GetChatMessages(context.Context, models.GetChatMessagesRequest) (*[]models.Message, error)
 }
 
 type ChatRepository interface {
-	Create(context.Context, models.CreateChatDTO) (*models.ChatId, error)
-	GetUserChats(context.Context, models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOResponse, error)
+	Create(context.Context, models.CreateChatRequest) (*models.ChatId, error)
+	GetUserChats(context.Context, models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error)
 }
 
 type UserRepository interface {
-	Create(context.Context, models.CreateUserDTO) (*models.UserId, error)
+	Create(context.Context, models.CreateUserRequest) (*models.UserId, error)
 }

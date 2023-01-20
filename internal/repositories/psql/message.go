@@ -23,7 +23,7 @@ func NewPostgresMessageRepository(pc postgresql.Connection) repositories.Message
 	}
 }
 
-func (mr *messageRepository) Create(ctx context.Context, chat models.CreateMessageDTO) (messageId *models.MessageId, err error) {
+func (mr *messageRepository) Create(ctx context.Context, chat models.CreateMessageRequest) (messageId *models.MessageId, err error) {
 	messageId = &models.MessageId{}
 
 	q1 := `
@@ -57,7 +57,7 @@ RETURNING messages.id;`
 }
 
 func (mr *messageRepository) GetChatMessages(ctx context.Context,
-	chat models.GetChatMessagesDRORequest) (*[]models.Message, error) {
+	chat models.GetChatMessagesRequest) (*[]models.Message, error) {
 	answer := make([]models.Message, 0)
 
 	q := `

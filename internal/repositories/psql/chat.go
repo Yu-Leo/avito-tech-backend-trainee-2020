@@ -23,7 +23,7 @@ func NewPostgresChatRepository(pc postgresql.Connection) repositories.ChatReposi
 	}
 }
 
-func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatDTO) (chatId *models.ChatId, err error) {
+func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatRequest) (chatId *models.ChatId, err error) {
 	var pgErr *pgconn.PgError
 	chatId = &models.ChatId{}
 
@@ -68,14 +68,14 @@ VALUES ($1, $2);
 	return chatId, nil
 }
 
-func (cr *chatRepository) GetUserChats(ctx context.Context, chat models.GetUserChatsDTORequest) (*[]models.GetUserChatsDTOResponse, error) {
+func (cr *chatRepository) GetUserChats(ctx context.Context, chat models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
 	transaction, err := cr.postgresConnection.Begin(context.Background())
 	if err != nil {
 		return nil, err
 	}
 	defer transaction.Rollback(context.Background())
 
-	answer := make([]models.GetUserChatsDTOResponse, 0)
+	answer := make([]models.GetUserChatsResponse, 0)
 	q1 := `
 SELECT chats.id, chats.name, chats.created_at
 FROM users_chats
@@ -91,7 +91,7 @@ ORDER BY (SELECT (MAX(created_at))
 		return nil, err
 	}
 	for rows.Next() {
-		userChat := models.GetUserChatsDTOResponse{}
+		userChat := models.GetUserChatsResponse{}
 		err = rows.Scan(&userChat.Id, &userChat.Name, &userChat.CreatedAt)
 		if err != nil {
 			return nil, err

@@ -37,13 +37,13 @@ func NewMessageRoutes(handler *gin.RouterGroup, messageService *services.Message
 // @Tags  	    message
 // @Accept      json
 // @Produce     json
-// @Param createMessageObject body models.CreateMessageDTO true "Parameters for creating a message."
+// @Param createMessageObject body models.CreateMessageRequest true "Parameters for creating a message."
 // @Success     201 {object} models.MessageId
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /messages/add [post]
 func (r *messageRoutes) CreateMessage(c *gin.Context) {
-	messageDTO := models.CreateMessageDTO{}
+	messageDTO := models.CreateMessageRequest{}
 
 	err := c.BindJSON(&messageDTO)
 	if err != nil {
@@ -71,13 +71,13 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 // @Tags  	    message
 // @Accept      json
 // @Produce     json
-// @Param getChatsMessagesObject body models.GetChatMessagesDRORequest true "Parameters for getting chat messages."
+// @Param getChatsMessagesObject body models.GetChatMessagesRequest true "Parameters for getting chat messages."
 // @Success     200 {array} models.Message
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /messages/get [post]
 func (r *messageRoutes) GetChatMessages(c *gin.Context) {
-	chatMessagesDTORequest := models.GetChatMessagesDRORequest{}
+	chatMessagesDTORequest := models.GetChatMessagesRequest{}
 
 	err := c.BindJSON(&chatMessagesDTORequest)
 	if err != nil {

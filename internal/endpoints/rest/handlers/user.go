@@ -36,13 +36,13 @@ func NewUserRoutes(handler *gin.RouterGroup, userService *services.UserService, 
 // @Tags  	    user
 // @Accept      json
 // @Produce     json
-// @Param createUserObject body models.CreateUserDTO true "Parameters for creating a user."
+// @Param createUserObject body models.CreateUserRequest true "Parameters for creating a user."
 // @Success     200 {object} models.UserId
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /users/add [post]
 func (r *userRoutes) CreateUser(c *gin.Context) {
-	userDTO := models.CreateUserDTO{}
+	userDTO := models.CreateUserRequest{}
 
 	err := c.BindJSON(&userDTO)
 	if err != nil {

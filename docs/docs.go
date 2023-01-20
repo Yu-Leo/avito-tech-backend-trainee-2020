@@ -40,7 +40,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateChatDTO"
+                            "$ref": "#/definitions/models.CreateChatRequest"
                         }
                     }
                 ],
@@ -87,7 +87,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.GetUserChatsDTORequest"
+                            "$ref": "#/definitions/models.GetUserChatsRequest"
                         }
                     }
                 ],
@@ -97,7 +97,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.GetUserChatsDTOResponse"
+                                "$ref": "#/definitions/models.GetUserChatsResponse"
                             }
                         }
                     },
@@ -137,7 +137,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateMessageDTO"
+                            "$ref": "#/definitions/models.CreateMessageRequest"
                         }
                     }
                 ],
@@ -184,7 +184,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.GetChatMessagesDRORequest"
+                            "$ref": "#/definitions/models.GetChatMessagesRequest"
                         }
                     }
                 ],
@@ -234,7 +234,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateUserDTO"
+                            "$ref": "#/definitions/models.CreateUserRequest"
                         }
                     }
                 ],
@@ -278,7 +278,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.CreateChatDTO": {
+        "models.CreateChatRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -296,7 +296,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.CreateMessageDTO": {
+        "models.CreateMessageRequest": {
             "type": "object",
             "required": [
                 "author",
@@ -315,7 +315,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.CreateUserDTO": {
+        "models.CreateUserRequest": {
             "type": "object",
             "required": [
                 "username"
@@ -326,7 +326,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.GetChatMessagesDRORequest": {
+        "models.GetChatMessagesRequest": {
             "type": "object",
             "required": [
                 "chat"
@@ -337,7 +337,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.GetUserChatsDTOResponse": {
+        "models.GetUserChatsResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -357,7 +357,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.GetUserChatsDTORequest": {
+        "models.GetUserChatsRequest": {
             "type": "object",
             "required": [
                 "user"

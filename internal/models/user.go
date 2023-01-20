@@ -12,6 +12,6 @@ type UserId struct {
 	Id int `json:"userId"`
 }
 
-type CreateUserDTO struct {
+type CreateUserRequest struct {
 	Username string `json:"username" binding:"required"`
 }
