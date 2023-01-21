@@ -120,8 +120,7 @@ WHERE users_chats.user_id = $1
 ORDER BY (SELECT (MAX(created_at))
           FROM messages
           WHERE chat_id = users_chats.chat_id
-          GROUP BY chat_id) DESC;
-`
+          GROUP BY chat_id) DESC;`
 	rows, err := transaction.Query(ctx, q, userId)
 	if err != nil {
 		return nil, err
@@ -143,8 +142,7 @@ func addUsersListForChats(transaction pgx.Tx, ctx context.Context, chats *[]mode
 		q := `
 SELECT users_chats.user_id
 FROM users_chats
-WHERE users_chats.chat_id = $1;
-`
+WHERE users_chats.chat_id = $1;`
 		rows, err := transaction.Query(ctx, q, (*chats)[i].Id)
 		if err != nil {
 			return err

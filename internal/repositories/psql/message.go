@@ -49,9 +49,7 @@ func (mr *messageRepository) GetChatMessages(ctx context.Context,
 	q := `
 SELECT id, user_id, chat_id, message_text, created_at
 FROM messages
-WHERE chat_id = $1
-
-`
+WHERE chat_id = $1;`
 	rows, err := mr.postgresConnection.Query(ctx, q, requestData.ChatId)
 	if err != nil {
 		return nil, err
