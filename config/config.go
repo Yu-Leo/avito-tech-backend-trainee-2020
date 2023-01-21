@@ -7,6 +7,10 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
+const (
+	pathToConfigFile = "./config/config.yaml" // Path to config file from base project dir
+)
+
 type Config struct {
 	App     AppConfig     `yaml:"app"`
 	Server  ServerConfig  `yaml:"server"`
@@ -46,7 +50,7 @@ var once sync.Once
 func GetConfig() (*Config, error) {
 	once.Do(func() {
 		instance = &Config{}
-		err = cleanenv.ReadConfig("./config/config.yaml", instance)
+		err = cleanenv.ReadConfig(pathToConfigFile, instance)
 		if err != nil {
 			help, _ := cleanenv.GetDescription(instance, nil)
 			log.Println(help)
