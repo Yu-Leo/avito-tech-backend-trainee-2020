@@ -32,7 +32,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateChatDTO"
+                            "$ref": "#/definitions/models.CreateChatRequest"
                         }
                     }
                 ],
@@ -79,7 +79,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.GetUserChatsDTORequest"
+                            "$ref": "#/definitions/models.GetUserChatsRequest"
                         }
                     }
                 ],
@@ -89,7 +89,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.GetUserChatsDTOResponse"
+                                "$ref": "#/definitions/models.GetUserChatsResponse"
                             }
                         }
                     },
@@ -129,7 +129,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateMessageDTO"
+                            "$ref": "#/definitions/models.CreateMessageRequest"
                         }
                     }
                 ],
@@ -176,7 +176,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.GetChatMessagesDRORequest"
+                            "$ref": "#/definitions/models.GetChatMessagesRequest"
                         }
                     }
                 ],
@@ -226,7 +226,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateUserDTO"
+                            "$ref": "#/definitions/models.CreateUserRequest"
                         }
                     }
                 ],
@@ -257,6 +257,9 @@
         "apperror.ErrorJSON": {
             "type": "object",
             "properties": {
+                "developerMessage": {
+                    "type": "string"
+                },
                 "message": {
                     "type": "string"
                 }
@@ -270,7 +273,7 @@
                 }
             }
         },
-        "models.CreateChatDTO": {
+        "models.CreateChatRequest": {
             "type": "object",
             "required": [
                 "name",
@@ -288,7 +291,7 @@
                 }
             }
         },
-        "models.CreateMessageDTO": {
+        "models.CreateMessageRequest": {
             "type": "object",
             "required": [
                 "author",
@@ -307,7 +310,7 @@
                 }
             }
         },
-        "models.CreateUserDTO": {
+        "models.CreateUserRequest": {
             "type": "object",
             "required": [
                 "username"
@@ -318,7 +321,7 @@
                 }
             }
         },
-        "models.GetChatMessagesDRORequest": {
+        "models.GetChatMessagesRequest": {
             "type": "object",
             "required": [
                 "chat"
@@ -329,7 +332,18 @@
                 }
             }
         },
-        "models.GetUserChatsDTOResponse": {
+        "models.GetUserChatsRequest": {
+            "type": "object",
+            "required": [
+                "user"
+            ],
+            "properties": {
+                "user": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.GetUserChatsResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -346,17 +360,6 @@
                     "items": {
                         "type": "integer"
                     }
-                }
-            }
-        },
-        "models.GetUserChatsDTORequest": {
-            "type": "object",
-            "required": [
-                "user"
-            ],
-            "properties": {
-                "user": {
-                    "type": "integer"
                 }
             }
         },

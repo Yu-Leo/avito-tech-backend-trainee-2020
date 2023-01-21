@@ -47,17 +47,21 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 
 	err := c.BindJSON(&messageDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
+		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
+			Message:          apperror.ValidationErrorMsg,
+			DeveloperMessage: err.Error()})
 		return
 	}
 	newMessageID, err := r.messageService.CreateMessage(messageDTO)
 
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) || errors.Is(err, apperror.UserIsNotInChat) {
-			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
+			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
+				Message:          apperror.ValidationErrorMsg,
+				DeveloperMessage: err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerError.Error()})
+		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerErrorMsg})
 		r.logger.Error(err.Error())
 		return
 	}
@@ -81,17 +85,21 @@ func (r *messageRoutes) GetChatMessages(c *gin.Context) {
 
 	err := c.BindJSON(&chatMessagesDTORequest)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
+		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
+			Message:          apperror.ValidationErrorMsg,
+			DeveloperMessage: err.Error()})
 		return
 	}
 
 	chatMessages, err := r.messageService.GetChatMessages(chatMessagesDTORequest)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
-			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
+			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
+				Message:          apperror.ValidationErrorMsg,
+				DeveloperMessage: err.Error()})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerError.Error()})
+		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerErrorMsg})
 		r.logger.Error(err.Error())
 		return
 	}

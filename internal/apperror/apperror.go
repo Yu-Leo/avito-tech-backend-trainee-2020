@@ -9,10 +9,6 @@ var (
 		"The object with the specified id not found",
 		"")
 
-	InternalServerError = NewAppError(
-		"Internal Server Error",
-		"")
-
 	ChatNameAlreadyExists = NewAppError(
 		"The chat with the specified name already exists",
 		"")
@@ -26,8 +22,14 @@ var (
 		"")
 )
 
+const (
+	ValidationErrorMsg = "Validation error"
+	InternalServerErrorMsg = "Internal Server Error"
+)
+
 type ErrorJSON struct {
-	Message string `json:"message"`
+	Message          string `json:"message"`
+	DeveloperMessage string `json:"developerMessage"`
 }
 
 type AppError struct {
