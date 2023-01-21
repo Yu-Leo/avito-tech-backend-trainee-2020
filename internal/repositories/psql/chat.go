@@ -178,3 +178,20 @@ WHERE id = $1;`
 	rows.Close()
 	return true, nil
 }
+
+func (cr *chatRepository) IsUserInChat(ctx context.Context, userId, chatId int) (bool, error) {
+	q := `
+SELECT id
+FROM users_chats
+WHERE user_id = $1 AND chat_id = $2;`
+	rows, err := cr.postgresConnection.Query(ctx, q, userId, chatId)
+
+	if err != nil {
+		return false, err
+	}
+	if !rows.Next() {
+		return false, nil
+	}
+	rows.Close()
+	return true, nil
+}

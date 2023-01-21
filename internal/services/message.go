@@ -16,11 +16,18 @@ type MessageService struct {
 func NewMessageService(messageRepository repositories.MessageRepository, chatRepository repositories.ChatRepository) *MessageService {
 	return &MessageService{
 		messageRepository: messageRepository,
-		chatRepository: chatRepository,
+		chatRepository:    chatRepository,
 	}
 }
 
 func (s MessageService) CreateMessage(message models.CreateMessageRequest) (*models.MessageId, error) {
+	b, err := s.chatRepository.IsUserInChat(context.Background(), message.UserId, message.ChatId)
+	if err != nil {
+		return nil, err
+	}
+	if !b {
+		return nil, apperror.UserIsNotInChat
+	}
 	return s.messageRepository.Create(context.Background(), message)
 }
 
