@@ -46,18 +46,22 @@ func (r *userRoutes) CreateUser(c *gin.Context) {
 
 	err := c.BindJSON(&userDTO)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
+		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
+			Message:          apperror.ValidationErrorMsg,
+			DeveloperMessage: err.Error()})
 		return
 	}
 
 	newUserId, err := r.userService.CreateUser(userDTO)
 	if err != nil {
 		if errors.Is(err, apperror.UsernameAlreadyExists) || errors.Is(err, apperror.TooLongName) {
-			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{Message: err.Error()})
+			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
+				Message:          apperror.ValidationErrorMsg,
+				DeveloperMessage: err.Error()})
 			return
 		}
 
-		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerError.Error()})
+		c.JSON(http.StatusInternalServerError, apperror.ErrorJSON{Message: apperror.InternalServerErrorMsg})
 		r.logger.Error(err.Error())
 		return
 	}

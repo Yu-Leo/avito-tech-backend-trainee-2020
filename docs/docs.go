@@ -265,6 +265,9 @@ const docTemplate = `{
         "apperror.ErrorJSON": {
             "type": "object",
             "properties": {
+                "developerMessage": {
+                    "type": "string"
+                },
                 "message": {
                     "type": "string"
                 }
@@ -337,6 +340,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.GetUserChatsRequest": {
+            "type": "object",
+            "required": [
+                "user"
+            ],
+            "properties": {
+                "user": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.GetUserChatsResponse": {
             "type": "object",
             "properties": {
@@ -354,17 +368,6 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
-                }
-            }
-        },
-        "models.GetUserChatsRequest": {
-            "type": "object",
-            "required": [
-                "user"
-            ],
-            "properties": {
-                "user": {
-                    "type": "integer"
                 }
             }
         },

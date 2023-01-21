@@ -2,6 +2,8 @@ basePath: /
 definitions:
   apperror.ErrorJSON:
     properties:
+      developerMessage:
+        type: string
       message:
         type: string
     type: object
@@ -10,7 +12,7 @@ definitions:
       chatId:
         type: integer
     type: object
-  models.CreateChatDTO:
+  models.CreateChatRequest:
     properties:
       name:
         type: string
@@ -22,7 +24,7 @@ definitions:
     - name
     - users
     type: object
-  models.CreateMessageDTO:
+  models.CreateMessageRequest:
     properties:
       author:
         type: integer
@@ -35,21 +37,28 @@ definitions:
     - chat
     - text
     type: object
-  models.CreateUserDTO:
+  models.CreateUserRequest:
     properties:
       username:
         type: string
     required:
     - username
     type: object
-  models.GetChatMessagesDRORequest:
+  models.GetChatMessagesRequest:
     properties:
       chat:
         type: integer
     required:
     - chat
     type: object
-  models.GetUserChatsDTOResponse:
+  models.GetUserChatsRequest:
+    properties:
+      user:
+        type: integer
+    required:
+    - user
+    type: object
+  models.GetUserChatsResponse:
     properties:
       createdAt:
         type: string
@@ -61,13 +70,6 @@ definitions:
         items:
           type: integer
         type: array
-    type: object
-  models.GetUserChatsDTORequest:
-    properties:
-      user:
-        type: integer
-    required:
-    - user
     type: object
   models.Message:
     properties:
@@ -112,7 +114,7 @@ paths:
         name: createChatObject
         required: true
         schema:
-          $ref: '#/definitions/models.CreateChatDTO'
+          $ref: '#/definitions/models.CreateChatRequest'
       produces:
       - application/json
       responses:
@@ -143,7 +145,7 @@ paths:
         name: getUserChatsObject
         required: true
         schema:
-          $ref: '#/definitions/models.GetUserChatsDTORequest'
+          $ref: '#/definitions/models.GetUserChatsRequest'
       produces:
       - application/json
       responses:
@@ -151,7 +153,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.GetUserChatsDTOResponse'
+              $ref: '#/definitions/models.GetUserChatsResponse'
             type: array
         "400":
           description: Bad Request
@@ -176,7 +178,7 @@ paths:
         name: createMessageObject
         required: true
         schema:
-          $ref: '#/definitions/models.CreateMessageDTO'
+          $ref: '#/definitions/models.CreateMessageRequest'
       produces:
       - application/json
       responses:
@@ -207,7 +209,7 @@ paths:
         name: getChatsMessagesObject
         required: true
         schema:
-          $ref: '#/definitions/models.GetChatMessagesDRORequest'
+          $ref: '#/definitions/models.GetChatMessagesRequest'
       produces:
       - application/json
       responses:
@@ -240,7 +242,7 @@ paths:
         name: createUserObject
         required: true
         schema:
-          $ref: '#/definitions/models.CreateUserDTO'
+          $ref: '#/definitions/models.CreateUserRequest'
       produces:
       - application/json
       responses:

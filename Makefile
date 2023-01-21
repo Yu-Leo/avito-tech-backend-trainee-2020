@@ -1,7 +1,7 @@
 # Documentation
 
 init-swag: ### Init OpenAPI Specification files
-	swag init -g internal/endpoints/http/router.go
+	swag init -g internal/endpoints/rest/router.go
 .PHONY: init-swag
 
 
