@@ -105,12 +105,12 @@ func TestCreateChatWithEmptyBody(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestCreateChatWithNotExistsUser(t *testing.T) {
+func TestCreateChatWithNonExistentUserId(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 
-	var users []int
-	users = append(users, 9999)
+	users := make([]int, 1)
+	users[0] = NonExistentId
 	req, err := createChatRequest(getUniqueChatName(), users)
 	assert.Nil(t, err)
 
@@ -123,7 +123,7 @@ func TestCreateChatWithNotExistsUser(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestCreateChatWithInvalidRequest(t *testing.T) {
+func TestCreateChatWithInvalidRequestBody(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 

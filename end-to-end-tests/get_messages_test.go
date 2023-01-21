@@ -76,9 +76,9 @@ func TestGetChatMessagesSuccess(t *testing.T) {
 	assert.Equal(t, chatMessages[0].Text, "text")
 }
 
-func TestGetChatMessagesNotExistsChat(t *testing.T) {
+func TestGetChatMessagesWithNonExistentChatId(t *testing.T) {
 	// Arrange
-	req, err := getMessagesRequest(999)
+	req, err := getMessagesRequest(NonExistentId)
 	assert.Nil(t, err)
 	client := &http.Client{}
 
@@ -91,7 +91,7 @@ func TestGetChatMessagesNotExistsChat(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestGetChatMessagesWithEmptyBody(t *testing.T) {
+func TestGetChatMessagesWithEmptyRequestBody(t *testing.T) {
 	// Arrange
 	req, err := http.NewRequest("POST", getMessagesUrl, bytes.NewBuffer([]byte("{}")))
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
