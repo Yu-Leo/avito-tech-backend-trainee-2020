@@ -41,3 +41,20 @@ RETURNING users.id;
 	}
 	return userId, nil
 }
+
+func (ur *userRepository) DoesUserIdExist(ctx context.Context, userId int) (bool, error) {
+	q := `
+SELECT id
+FROM users
+WHERE id = $1;`
+	rows, err := ur.postgresConnection.Query(ctx, q, userId)
+
+	if err != nil {
+		return false, err
+	}
+	if !rows.Next() {
+		return false, nil
+	}
+	rows.Close()
+	return true, nil
+}

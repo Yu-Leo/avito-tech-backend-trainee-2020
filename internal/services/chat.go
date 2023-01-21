@@ -14,12 +14,14 @@ const (
 )
 
 type ChatService struct {
-	repository repositories.ChatRepository
+	chatRepository repositories.ChatRepository
+	userRepository repositories.UserRepository
 }
 
-func NewChatService(chatRepository repositories.ChatRepository) *ChatService {
+func NewChatService(chatRepository repositories.ChatRepository, userRepository repositories.UserRepository) *ChatService {
 	return &ChatService{
-		repository: chatRepository,
+		chatRepository: chatRepository,
+		userRepository: userRepository,
 	}
 }
 
@@ -27,9 +29,16 @@ func (s ChatService) CreateChat(chat models.CreateChatRequest) (*models.ChatId, 
 	if utf8.RuneCountInString(chat.Name) > maxLenOfChatName {
 		return nil, apperror.TooLongName
 	}
-	return s.repository.Create(context.Background(), chat)
+	return s.chatRepository.Create(context.Background(), chat)
 }
 
 func (s ChatService) GetUserChats(chat models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
-	return s.repository.GetUserChats(context.Background(), chat)
+	b, err := s.userRepository.DoesUserIdExist(context.Background(), chat.User)
+	if err != nil {
+		return nil, err
+	}
+	if !b {
+		return nil, apperror.IDNotFound
+	}
+	return s.chatRepository.GetUserChats(context.Background(), chat)
 }
