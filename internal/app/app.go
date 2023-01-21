@@ -40,7 +40,7 @@ func Run(cfg *config.Config) {
 
 	userService := services.NewUserService(userRepository)
 	chatService := services.NewChatService(chatRepository, userRepository)
-	messageService := services.NewMessageService(messageRepository)
+	messageService := services.NewMessageService(messageRepository, chatRepository)
 
 	if cfg.Server.Mode == gin.ReleaseMode {
 		gin.SetMode(gin.ReleaseMode)
