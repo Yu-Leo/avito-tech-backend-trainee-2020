@@ -24,7 +24,7 @@ func NewPostgresChatRepository(pc postgresql.Connection) repositories.ChatReposi
 	}
 }
 
-func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatRequest) (chatId *models.ChatId, err error) {
+func (cr *chatRepository) Create(ctx context.Context, requestData models.CreateChatRequest) (chatId *models.ChatId, err error) {
 	chatId = &models.ChatId{}
 
 	transaction, err := cr.postgresConnection.Begin(context.Background())
@@ -33,12 +33,12 @@ func (cr *chatRepository) Create(ctx context.Context, chat models.CreateChatRequ
 	}
 	defer transaction.Rollback(context.Background())
 
-	chatId.Id, err = createChat(transaction, ctx, chat.Name)
+	chatId.Id, err = createChat(transaction, ctx, requestData.Name)
 	if err != nil {
 		return nil, err
 	}
 
-	err = addUsersToChat(transaction, ctx, chatId.Id, chat.Users)
+	err = addUsersToChat(transaction, ctx, chatId.Id, requestData.Users)
 	if err != nil {
 		return nil, err
 	}
@@ -85,14 +85,14 @@ VALUES ($1, $2);`
 	return nil
 }
 
-func (cr *chatRepository) GetUserChats(ctx context.Context, chat models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
+func (cr *chatRepository) GetUserChats(ctx context.Context, requestData models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
 	transaction, err := cr.postgresConnection.Begin(context.Background())
 	if err != nil {
 		return nil, err
 	}
 	defer transaction.Rollback(context.Background())
 
-	userChats, err := getUserChatsWithoutUsersList(transaction, ctx, chat.User)
+	userChats, err := getUserChatsWithoutUsersList(transaction, ctx, requestData.User)
 	if err != nil {
 		return nil, err
 	}

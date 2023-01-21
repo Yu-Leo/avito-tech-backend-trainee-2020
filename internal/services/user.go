@@ -23,9 +23,9 @@ func NewUserService(userRepository repositories.UserRepository) *UserService {
 	}
 }
 
-func (s UserService) CreateUser(user models.CreateUserRequest) (*models.UserId, error) {
-	if utf8.RuneCountInString(user.Username) > maxLenOfUserName {
+func (s UserService) CreateUser(requestData models.CreateUserRequest) (*models.UserId, error) {
+	if utf8.RuneCountInString(requestData.Username) > maxLenOfUserName {
 		return nil, apperror.TooLongName
 	}
-	return s.repository.Create(context.Background(), user)
+	return s.repository.Create(context.Background(), requestData)
 }

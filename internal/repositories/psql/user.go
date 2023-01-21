@@ -23,7 +23,7 @@ func NewPostgresUserRepository(pc postgresql.Connection) repositories.UserReposi
 	}
 }
 
-func (ur *userRepository) Create(ctx context.Context, user models.CreateUserRequest) (userId *models.UserId, err error) {
+func (ur *userRepository) Create(ctx context.Context, requestData models.CreateUserRequest) (userId *models.UserId, err error) {
 	userId = &models.UserId{}
 
 	q := `
@@ -31,7 +31,7 @@ INSERT INTO users (username)
 VALUES ($1)
 RETURNING users.id;
 		`
-	err = ur.postgresConnection.QueryRow(ctx, q, user.Username).Scan(&(*userId).Id)
+	err = ur.postgresConnection.QueryRow(ctx, q, requestData.Username).Scan(&(*userId).Id)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.UniqueViolation {

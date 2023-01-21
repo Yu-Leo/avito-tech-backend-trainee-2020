@@ -43,9 +43,9 @@ func NewChatRoutes(handler *gin.RouterGroup, chatService *services.ChatService, 
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /chats/add [post]
 func (r *chatRoutes) CreateChat(c *gin.Context) {
-	chatDTO := models.CreateChatRequest{}
+	createRequest := models.CreateChatRequest{}
 
-	err := c.BindJSON(&chatDTO)
+	err := c.BindJSON(&createRequest)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
 			Message:          apperror.ValidationErrorMsg,
@@ -53,11 +53,11 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 		return
 	}
 
-	newChatID, err := r.chatService.CreateChat(chatDTO)
+	newChatID, err := r.chatService.CreateChat(createRequest)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) || errors.Is(err, apperror.ChatNameAlreadyExists) || errors.Is(err, apperror.TooLongName) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
-				Message: apperror.ValidationErrorMsg,
+				Message:          apperror.ValidationErrorMsg,
 				DeveloperMessage: err.Error()})
 			return
 		}
@@ -81,9 +81,9 @@ func (r *chatRoutes) CreateChat(c *gin.Context) {
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /chats/get [post]
 func (r *chatRoutes) GetUserChats(c *gin.Context) {
-	userChatsDTORequest := models.GetUserChatsRequest{}
+	requestData := models.GetUserChatsRequest{}
 
-	err := c.BindJSON(&userChatsDTORequest)
+	err := c.BindJSON(&requestData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
 			Message:          apperror.ValidationErrorMsg,
@@ -91,7 +91,7 @@ func (r *chatRoutes) GetUserChats(c *gin.Context) {
 		return
 	}
 
-	userChatsDTOResponse, err := r.chatService.GetUserChats(userChatsDTORequest)
+	responseData, err := r.chatService.GetUserChats(requestData)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
@@ -104,5 +104,5 @@ func (r *chatRoutes) GetUserChats(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, *userChatsDTOResponse)
+	c.JSON(http.StatusOK, *responseData)
 }

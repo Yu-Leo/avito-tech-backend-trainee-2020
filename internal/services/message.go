@@ -20,24 +20,24 @@ func NewMessageService(messageRepository repositories.MessageRepository, chatRep
 	}
 }
 
-func (s MessageService) CreateMessage(message models.CreateMessageRequest) (*models.MessageId, error) {
-	b, err := s.chatRepository.IsUserInChat(context.Background(), message.UserId, message.ChatId)
+func (s MessageService) CreateMessage(requestData models.CreateMessageRequest) (*models.MessageId, error) {
+	b, err := s.chatRepository.IsUserInChat(context.Background(), requestData.UserId, requestData.ChatId)
 	if err != nil {
 		return nil, err
 	}
 	if !b {
 		return nil, apperror.UserIsNotInChat
 	}
-	return s.messageRepository.Create(context.Background(), message)
+	return s.messageRepository.Create(context.Background(), requestData)
 }
 
-func (s MessageService) GetChatMessages(chat models.GetChatMessagesRequest) (*[]models.Message, error) {
-	b, err := s.chatRepository.DoesChatIdExist(context.Background(), chat.ChatId)
+func (s MessageService) GetChatMessages(requestData models.GetChatMessagesRequest) (*[]models.Message, error) {
+	b, err := s.chatRepository.DoesChatIdExist(context.Background(), requestData.ChatId)
 	if err != nil {
 		return nil, err
 	}
 	if !b {
 		return nil, apperror.IDNotFound
 	}
-	return s.messageRepository.GetChatMessages(context.Background(), chat)
+	return s.messageRepository.GetChatMessages(context.Background(), requestData)
 }
