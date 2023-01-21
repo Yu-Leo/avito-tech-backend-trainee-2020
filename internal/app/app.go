@@ -39,7 +39,7 @@ func Run(cfg *config.Config) {
 	messageRepository := psql.NewPostgresMessageRepository(postgresConnection)
 
 	userService := services.NewUserService(userRepository)
-	chatService := services.NewChatService(chatRepository)
+	chatService := services.NewChatService(chatRepository, userRepository)
 	messageService := services.NewMessageService(messageRepository)
 
 	if cfg.Server.Mode == gin.ReleaseMode {

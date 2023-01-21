@@ -18,4 +18,5 @@ type ChatRepository interface {
 
 type UserRepository interface {
 	Create(context.Context, models.CreateUserRequest) (*models.UserId, error)
+	DoesUserIdExist(context.Context, int) (bool, error)
 }
