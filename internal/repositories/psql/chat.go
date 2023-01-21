@@ -161,3 +161,20 @@ WHERE users_chats.chat_id = $1;
 	}
 	return nil
 }
+
+func (cr *chatRepository) DoesChatIdExist(ctx context.Context, chatId int) (bool, error) {
+	q := `
+SELECT id
+FROM chats
+WHERE id = $1;`
+	rows, err := cr.postgresConnection.Query(ctx, q, chatId)
+
+	if err != nil {
+		return false, err
+	}
+	if !rows.Next() {
+		return false, nil
+	}
+	rows.Close()
+	return true, nil
+}

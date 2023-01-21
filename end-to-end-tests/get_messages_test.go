@@ -88,7 +88,7 @@ func TestGetChatMessagesNotExistsChat(t *testing.T) {
 	defer res.Body.Close()
 
 	// Assert
-	assert.Equal(t, http.StatusOK, res.StatusCode)
+	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
 func TestGetChatMessagesWithEmptyBody(t *testing.T) {
