@@ -102,11 +102,11 @@ func TestGetUserChatsSuccess(t *testing.T) {
 	assert.Equal(t, userChats[0].Name, chatName)
 }
 
-func TestGetUserChatsWithNotExistsUser(t *testing.T) {
+func TestGetUserChatsWithNonExistentUserId(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 
-	req, err := getChatsRequest(999)
+	req, err := getChatsRequest(NonExistentId)
 	assert.Nil(t, err)
 
 	// Act
@@ -118,7 +118,7 @@ func TestGetUserChatsWithNotExistsUser(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestGetUserChatsWithEmptyBody(t *testing.T) {
+func TestGetUserChatsWithEmptyRequestBody(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 

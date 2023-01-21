@@ -41,7 +41,7 @@ func TestCreateUserSuccess(t *testing.T) {
 	assert.GreaterOrEqual(t, userId.Id, 1)
 }
 
-func TestCreateUserNotUniqueName(t *testing.T) {
+func TestCreateUserWithNotUniqueName(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 
@@ -81,7 +81,7 @@ func TestCreateUserWithTooLongName(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestCreateUserEmptyBody(t *testing.T) {
+func TestCreateUserWithEmptyRequestBody(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 
@@ -98,7 +98,7 @@ func TestCreateUserEmptyBody(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestCreateUserInvalidRequest(t *testing.T) {
+func TestCreateUserWithInvalidRequestBody(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 

@@ -28,6 +28,10 @@ const (
 	getMessagesUrl   = basePath + "/messages/get"
 )
 
+const (
+	NonExistentId = 999
+)
+
 func TestMain(m *testing.M) {
 	err := healthCheck()
 	if err != nil {

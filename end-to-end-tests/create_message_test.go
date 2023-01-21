@@ -48,14 +48,15 @@ func TestCreateMessageSuccess(t *testing.T) {
 	assert.GreaterOrEqual(t, messageId.Id, 1)
 }
 
-func TestCreateMessageWithNotExistsUser(t *testing.T) {
+func TestCreateMessageWithNonExistentUserId(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 
 	users := make([]int, 0)
 	chatId, err := createChat(getUniqueChatName(), users)
 	assert.Nil(t, err)
-	req, err := createMessageRequest(999, chatId, "text")
+
+	req, err := createMessageRequest(NonExistentId, chatId, "text")
 	assert.Nil(t, err)
 
 	// Act
@@ -67,13 +68,13 @@ func TestCreateMessageWithNotExistsUser(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestCreateMessageWithNotExistsChat(t *testing.T) {
+func TestCreateMessageWithNonExistentChatId(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 
 	userId, err := createUser(getUniqueUserName())
 	assert.Nil(t, err)
-	req, err := createMessageRequest(userId, 999, "text")
+	req, err := createMessageRequest(userId, NonExistentId, "text")
 	assert.Nil(t, err)
 
 	// Act
@@ -106,7 +107,7 @@ func TestCreateMessageWithAuthorNotFromChat(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 }
 
-func TestCreateMessageWithEmptyBody(t *testing.T) {
+func TestCreateMessageWithEmptyRequestBody(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
 
