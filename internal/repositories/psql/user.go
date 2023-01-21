@@ -29,8 +29,7 @@ func (ur *userRepository) Create(ctx context.Context, requestData models.CreateU
 	q := `
 INSERT INTO users (username)
 VALUES ($1)
-RETURNING users.id;
-		`
+RETURNING users.id;`
 	err = ur.postgresConnection.QueryRow(ctx, q, requestData.Username).Scan(&(*userId).Id)
 	if err != nil {
 		var pgErr *pgconn.PgError
