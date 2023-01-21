@@ -23,14 +23,14 @@ func NewPostgresMessageRepository(pc postgresql.Connection) repositories.Message
 	}
 }
 
-func (mr *messageRepository) Create(ctx context.Context, message models.CreateMessageRequest) (messageId *models.MessageId, err error) {
+func (mr *messageRepository) Create(ctx context.Context, requestData models.CreateMessageRequest) (messageId *models.MessageId, err error) {
 	messageId = &models.MessageId{}
 
 	q := `
 INSERT INTO messages (user_id, chat_id, message_text)
 VALUES ($1, $2, $3)
 RETURNING messages.id;`
-	err = mr.postgresConnection.QueryRow(ctx, q, message.UserId, message.ChatId, message.Text).Scan(&(*messageId).Id)
+	err = mr.postgresConnection.QueryRow(ctx, q, requestData.UserId, requestData.ChatId, requestData.Text).Scan(&(*messageId).Id)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == pgerrcode.ForeignKeyViolation {
@@ -42,7 +42,8 @@ RETURNING messages.id;`
 }
 
 func (mr *messageRepository) GetChatMessages(ctx context.Context,
-	chat models.GetChatMessagesRequest) (*[]models.Message, error) {
+	requestData models.GetChatMessagesRequest) (*[]models.Message, error) {
+
 	answer := make([]models.Message, 0)
 
 	q := `
@@ -51,7 +52,7 @@ FROM messages
 WHERE chat_id = $1
 
 `
-	rows, err := mr.postgresConnection.Query(ctx, q, chat.ChatId)
+	rows, err := mr.postgresConnection.Query(ctx, q, requestData.ChatId)
 	if err != nil {
 		return nil, err
 	}

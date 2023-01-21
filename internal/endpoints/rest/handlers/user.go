@@ -42,9 +42,9 @@ func NewUserRoutes(handler *gin.RouterGroup, userService *services.UserService, 
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /users/add [post]
 func (r *userRoutes) CreateUser(c *gin.Context) {
-	userDTO := models.CreateUserRequest{}
+	requestData := models.CreateUserRequest{}
 
-	err := c.BindJSON(&userDTO)
+	err := c.BindJSON(&requestData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
 			Message:          apperror.ValidationErrorMsg,
@@ -52,7 +52,7 @@ func (r *userRoutes) CreateUser(c *gin.Context) {
 		return
 	}
 
-	newUserId, err := r.userService.CreateUser(userDTO)
+	newUserId, err := r.userService.CreateUser(requestData)
 	if err != nil {
 		if errors.Is(err, apperror.UsernameAlreadyExists) || errors.Is(err, apperror.TooLongName) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{

@@ -43,16 +43,16 @@ func NewMessageRoutes(handler *gin.RouterGroup, messageService *services.Message
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /messages/add [post]
 func (r *messageRoutes) CreateMessage(c *gin.Context) {
-	messageDTO := models.CreateMessageRequest{}
+	requestData := models.CreateMessageRequest{}
 
-	err := c.BindJSON(&messageDTO)
+	err := c.BindJSON(&requestData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
 			Message:          apperror.ValidationErrorMsg,
 			DeveloperMessage: err.Error()})
 		return
 	}
-	newMessageID, err := r.messageService.CreateMessage(messageDTO)
+	newMessageID, err := r.messageService.CreateMessage(requestData)
 
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) || errors.Is(err, apperror.UserIsNotInChat) {
@@ -81,9 +81,9 @@ func (r *messageRoutes) CreateMessage(c *gin.Context) {
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /messages/get [post]
 func (r *messageRoutes) GetChatMessages(c *gin.Context) {
-	chatMessagesDTORequest := models.GetChatMessagesRequest{}
+	requestData := models.GetChatMessagesRequest{}
 
-	err := c.BindJSON(&chatMessagesDTORequest)
+	err := c.BindJSON(&requestData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, apperror.ErrorJSON{
 			Message:          apperror.ValidationErrorMsg,
@@ -91,7 +91,7 @@ func (r *messageRoutes) GetChatMessages(c *gin.Context) {
 		return
 	}
 
-	chatMessages, err := r.messageService.GetChatMessages(chatMessagesDTORequest)
+	chatMessages, err := r.messageService.GetChatMessages(requestData)
 	if err != nil {
 		if errors.Is(err, apperror.IDNotFound) {
 			c.JSON(http.StatusBadRequest, apperror.ErrorJSON{

@@ -25,20 +25,20 @@ func NewChatService(chatRepository repositories.ChatRepository, userRepository r
 	}
 }
 
-func (s ChatService) CreateChat(chat models.CreateChatRequest) (*models.ChatId, error) {
-	if utf8.RuneCountInString(chat.Name) > maxLenOfChatName {
+func (s ChatService) CreateChat(requestData models.CreateChatRequest) (*models.ChatId, error) {
+	if utf8.RuneCountInString(requestData.Name) > maxLenOfChatName {
 		return nil, apperror.TooLongName
 	}
-	return s.chatRepository.Create(context.Background(), chat)
+	return s.chatRepository.Create(context.Background(), requestData)
 }
 
-func (s ChatService) GetUserChats(chat models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
-	b, err := s.userRepository.DoesUserIdExist(context.Background(), chat.User)
+func (s ChatService) GetUserChats(requestData models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error) {
+	b, err := s.userRepository.DoesUserIdExist(context.Background(), requestData.User)
 	if err != nil {
 		return nil, err
 	}
 	if !b {
 		return nil, apperror.IDNotFound
 	}
-	return s.chatRepository.GetUserChats(context.Background(), chat)
+	return s.chatRepository.GetUserChats(context.Background(), requestData)
 }
