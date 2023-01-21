@@ -15,6 +15,7 @@ type ChatRepository interface {
 	Create(context.Context, models.CreateChatRequest) (*models.ChatId, error)
 	GetUserChats(context.Context, models.GetUserChatsRequest) (*[]models.GetUserChatsResponse, error)
 	DoesChatIdExist(context.Context, int) (bool, error)
+	IsUserInChat(context.Context, int, int) (bool, error)
 }
 
 type UserRepository interface {
