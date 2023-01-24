@@ -5,12 +5,11 @@ services:
     hostname: postgres
     image: postgres
     volumes:
-      - pg-data:/var/lib/postgresql/data
+      - pg-database:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: "postgres"
-    command: [ "postgres", "-c", "log_statement=all" ]
 
   init-db:
     build:
@@ -22,18 +21,11 @@ services:
       POSTGRES_HOST: "postgres"
       POSTGRES_PORT: 5432
       POSTGRES_DB: "postgres"
-    depends_on:
-      - postgres
-
-  end-to-end-tests:
-    build:
-      context: .
-      dockerfile: end-to-end-tests/Dockerfile
-    depends_on:
-      - webapp
 
   webapp:
     build: .
+    ports:
+      - "127.0.0.1:9000:9000"
     environment:
       DB_HOST: "postgres"
       APP_MODE: "release"
@@ -42,4 +34,4 @@ services:
       - postgres
 
 volumes:
-  pg-data:
+  pg-database:
