@@ -5,6 +5,8 @@ import (
 	"sync"
 
 	"github.com/ilyakaznacheev/cleanenv"
+
+	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 )
 
 const (
@@ -60,4 +62,14 @@ func GetConfig() (*Config, error) {
 		return nil, err
 	}
 	return instance, nil
+}
+
+func (c *Config) GetPostgresConfig() *postgresql.PostgresConfig {
+	return &postgresql.PostgresConfig{
+		Host:     c.Storage.Host,
+		Port:     c.Storage.Port,
+		Database: c.Storage.Database,
+		Username: c.Storage.Username,
+		Password: c.Storage.Password,
+	}
 }
