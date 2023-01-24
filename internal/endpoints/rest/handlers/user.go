@@ -37,7 +37,7 @@ func NewUserRoutes(handler *gin.RouterGroup, userService *services.UserService, 
 // @Accept      json
 // @Produce     json
 // @Param createUserObject body models.CreateUserRequest true "Parameters for creating a user."
-// @Success     200 {object} models.UserId
+// @Success     201 {object} models.UserId
 // @Failure	    400 {object} apperror.ErrorJSON
 // @Failure	    500 {object} apperror.ErrorJSON
 // @Router      /users/add [post]
