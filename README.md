@@ -14,8 +14,9 @@
 * [Project description](#chapter-0)
 * [API](#chapter-1)
 * [Quick start](#chapter-2)
-* [Source code](#chapter-3)
-* [License](#chapter-4)
+* [Tests](#chapter-3)
+* [Source code](#chapter-4)
+* [License](#chapter-5)
 
 <a id="chapter-0"></a>
 
@@ -81,10 +82,41 @@ at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/in
 <a id="chapter-2"></a>
 
 ## :zap: Quick start
+0. Install `git`, `docker`, `docker-compose` and `make`
 
-- [ ] Make commands
+1. Clone this repository
+```bash
+git clone https://github.com/Yu-Leo/avito-tech-backend-trainee-2020.git
+cd avito-tech-backend-trainee-2020
+```
+
+2. Init database in Docker volume
+```bash
+make init-db
+```
+
+3. Run service
+```bash
+make up
+```
+
+4. Stop service
+```bash
+make down
+```
 
 <a id="chapter-3"></a>
+
+## :coffee: Tests
+
+Written end-to-end tests check the interaction with the service via the [API](#chapter-1).
+
+**Run** end-to-end tests:
+```bash
+make end-to-end-tests-up
+```
+
+<a id="chapter-4"></a>
 
 ## :computer: Source code
 
@@ -105,21 +137,11 @@ Parameter values are set in the [`config/config.yaml`](./config/config.yaml) and
     - [`swag`](https://github.com/swaggo/swag) - Automatically generate RESTful API documentation with Swagger 2.0
     - [`cleanenv`](http://github.com/ilyakaznacheev/cleanenv) - Clean and minimalistic environment configuration reader
     - [`zerolog`](https://github.com/rs/zerolog) - Zero Allocation JSON Logger
-    - [ ] Other libs
 - Tools
     - **Docker** and **Docker compose**
     - **`make`**
 
-### Tests
-
-Written end-to-end tests check the interaction with the service via the [API](#chapter-1).
-
-**Run** end-to-end tests:
-```bash
-make end-to-end-tests-up
-```
-
-<a id="chapter-4"></a>
+<a id="chapter-5"></a>
 
 ## :open_hands: License
 
