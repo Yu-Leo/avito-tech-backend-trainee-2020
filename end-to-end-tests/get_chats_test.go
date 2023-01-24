@@ -102,6 +102,46 @@ func TestGetUserChatsSuccess(t *testing.T) {
 	assert.Equal(t, userChats[0].Name, chatName)
 }
 
+func TestGetUserChatsCheckChatsOrder(t *testing.T) {
+	// Arrange
+	client := &http.Client{}
+
+	userId, err := createUser(getUniqueUserName())
+	assert.Nil(t, err)
+	users := make([]int, 1)
+	users[0] = userId
+	chat1Name := getUniqueChatName()
+	chat2Name := getUniqueChatName()
+	chat1Id, err := createChat(chat1Name, users)
+	assert.Nil(t, err)
+	chat2Id, err := createChat(chat2Name, users)
+	assert.Nil(t, err)
+
+	_, err = createMessage(userId, chat1Id, "text")
+	assert.Nil(t, err)
+	_, err = createMessage(userId, chat2Id, "text")
+	assert.Nil(t, err)
+
+	req, err := getChatsRequest(userId)
+	assert.Nil(t, err)
+
+	// Act
+	res, err := client.Do(req)
+	assert.Nil(t, err)
+	defer res.Body.Close()
+
+	// Assert
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+	body, _ := io.ReadAll(res.Body)
+	var userChats []GetUserChatsResponse
+	err = json.Unmarshal(body, &userChats)
+	assert.Equal(t, len(userChats), 2)
+	assert.Equal(t, userChats[0].Id, chat2Id)
+	assert.Equal(t, userChats[0].Name, chat2Name)
+	assert.Equal(t, userChats[1].Id, chat1Id)
+	assert.Equal(t, userChats[1].Name, chat1Name)
+}
+
 func TestGetUserChatsWithNonExistentUserId(t *testing.T) {
 	// Arrange
 	client := &http.Client{}
