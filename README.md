@@ -82,25 +82,31 @@ at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/in
 <a id="chapter-2"></a>
 
 ## :zap: Quick start
+
 0. Install `git`, `docker`, `docker-compose` and `make`
 
 1. Clone this repository
+
 ```bash
 git clone https://github.com/Yu-Leo/avito-tech-backend-trainee-2020.git
 cd avito-tech-backend-trainee-2020
 ```
 
 2. Init database in Docker volume
+
 ```bash
 make init-db
+
 ```
 
 3. Run service
+
 ```bash
 make up
 ```
 
 4. Stop service
+
 ```bash
 make down
 ```
@@ -111,7 +117,10 @@ make down
 
 Written end-to-end tests check the interaction with the service via the [API](#chapter-1).
 
+See [end-to-end testing schema](./docs/end-to-end-tests-schema.jpg).
+
 **Run** end-to-end tests:
+
 ```bash
 make end-to-end-tests-up
 ```
