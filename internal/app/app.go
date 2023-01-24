@@ -18,12 +18,10 @@ import (
 	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/pkg/postgresql"
 )
 
-func Run(cfg *config.Config) {
-	l := logger.NewLogger(cfg.Logger.Level)
-
+func Run(cfg *config.Config, l logger.Interface) {
 	l.Info("Run application")
 
-	postgresConnection, err := postgresql.NewConnection(context.Background(), 2, cfg.Storage)
+	postgresConnection, err := postgresql.NewConnection(context.Background(), 2, cfg.GetPostgresConfig())
 	if err != nil {
 		l.Fatal(err.Error())
 	}
@@ -34,20 +32,12 @@ func Run(cfg *config.Config) {
 
 	l.Info("Open Postgres connection")
 
-	userRepository := psql.NewPostgresUserRepository(postgresConnection)
-	chatRepository := psql.NewPostgresChatRepository(postgresConnection)
-	messageRepository := psql.NewPostgresMessageRepository(postgresConnection)
-
-	userService := services.NewUserService(userRepository)
-	chatService := services.NewChatService(chatRepository, userRepository)
-	messageService := services.NewMessageService(messageRepository, chatRepository)
-
 	if cfg.Server.Mode == gin.ReleaseMode {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
 	ginEngine := gin.Default()
-	rest.NewRouter(ginEngine, l, userService, chatService, messageService)
+	addRouter(ginEngine, l, postgresConnection)
 	httpServer := httpserver.New(ginEngine, cfg.Server.Host, cfg.Server.Port)
 	l.Info(fmt.Sprintf("Run server on %s:%d", cfg.Server.Host, cfg.Server.Port))
 
@@ -67,4 +57,16 @@ func Run(cfg *config.Config) {
 	} else {
 		l.Error(fmt.Sprintf("HTTPServer shutdown error: %e", err))
 	}
+}
+
+func addRouter(ginEngine *gin.Engine, l logger.Interface, pc postgresql.Connection) {
+	userRepository := psql.NewPostgresUserRepository(pc)
+	chatRepository := psql.NewPostgresChatRepository(pc)
+	messageRepository := psql.NewPostgresMessageRepository(pc)
+
+	userService := services.NewUserService(userRepository)
+	chatService := services.NewChatService(chatRepository, userRepository)
+	messageService := services.NewMessageService(messageRepository, chatRepository)
+
+	rest.NewRouter(ginEngine, l, userService, chatService, messageService)
 }

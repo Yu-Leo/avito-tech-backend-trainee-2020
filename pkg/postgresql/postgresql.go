@@ -8,8 +8,6 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-
-	"github.com/Yu-Leo/avito-tech-backend-trainee-2020/config"
 )
 
 type Connection interface {
@@ -20,10 +18,18 @@ type Connection interface {
 	Release()
 }
 
-func NewConnection(ctx context.Context, maxAttempts int, sc config.StorageConfig) (conn Connection, err error) {
+type PostgresConfig struct {
+	Host     string
+	Port     int
+	Database string
+	Username string
+	Password string
+}
+
+func NewConnection(ctx context.Context, maxAttempts int, cfg *PostgresConfig) (conn Connection, err error) {
 	const timeDelta = 2 * time.Second
 
-	dbURL := fmt.Sprintf("postgresql://%s:%s@%s:%d/%s", sc.Username, sc.Password, sc.Host, sc.Port, sc.Database)
+	dbURL := fmt.Sprintf("postgresql://%s:%s@%s:%d/%s", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.Database)
 	var pool *pgxpool.Pool
 
 	pool, err = pgxpool.New(ctx, dbURL)
