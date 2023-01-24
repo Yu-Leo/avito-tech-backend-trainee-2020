@@ -67,14 +67,14 @@ Original: [database-schema.drawio](./docs/database-schema.drawio)
 
 :heavy_exclamation_mark: This API **does not** satisfy the RESTful API Best Practice.
 
-The URLs were specified in the [technical specification](./docs/technical_specification_ru.md).
+The URLs were specified in the [technical specification (RU)](./docs/technical_specification_ru.md#основные-api-методы).
 
 See the OpenAPI Specification in:
 
 - [`docs/swagger.json`](./docs/swagger.json)
 - [`docs/swagger.yaml`](./docs/swagger.yaml)
 
-[Open API Specification file Visualization](https://editor.swagger.io)
+You can use the [OpenAPI Specification file Visualization](https://editor.swagger.io).
 
 After launching the service, you can use the Swagger UI
 at [`http://127.0.0.1:9000/swagger/index.html`](http://127.0.0.1:9000/swagger/index.html).
