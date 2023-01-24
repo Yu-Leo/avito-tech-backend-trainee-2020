@@ -5,6 +5,24 @@ init-swag: ### Init OpenAPI Specification files
 .PHONY: init-swag
 
 
+# Production mode
+
+up: ### Run Postgres and webapp services in Docker containers
+	docker-compose -f docker-compose.yaml up --build -d postgres webapp
+.PHONY: up
+
+init-db: ### Init database in Postgres Docker container
+	docker-compose -f docker-compose.yaml up -d postgres
+	sleep 2
+	docker-compose -f docker-compose.yaml up --build init-db
+	docker-compose -f docker-compose.yaml down
+.PHONY: init-db
+
+down: ### Stop and delete all running containers
+	docker-compose -f docker-compose.yaml down
+.PHONY: down
+
+
 # Developer mode
 
 dev-up-all: ### Run Postgres and webapp services in Docker containers
