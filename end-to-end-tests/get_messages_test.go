@@ -53,7 +53,9 @@ func TestGetChatMessagesSuccess(t *testing.T) {
 	users := make([]int, 1)
 	users[0] = userId
 	chatId, err := createChat(getUniqueChatName(), users)
+	assert.Nil(t, err)
 	messageId, err := createMessage(userId, chatId, "text")
+	assert.Nil(t, err)
 
 	req, err := getMessagesRequest(chatId)
 	assert.Nil(t, err)
@@ -74,6 +76,46 @@ func TestGetChatMessagesSuccess(t *testing.T) {
 	assert.Equal(t, chatMessages[0].UserId, userId)
 	assert.Equal(t, chatMessages[0].ChatId, chatId)
 	assert.Equal(t, chatMessages[0].Text, "text")
+}
+
+func TestGetChatMessagesCheckMessagesOrder(t *testing.T) {
+	// Arrange
+	userId, err := createUser(getUniqueUserName())
+	assert.Nil(t, err)
+	users := make([]int, 1)
+	users[0] = userId
+	chatId, err := createChat(getUniqueChatName(), users)
+	text1 := "text 1"
+	message1Id, err := createMessage(userId, chatId, text1)
+	assert.Nil(t, err)
+	text2 := "text 1"
+	message2Id, err := createMessage(userId, chatId, text2)
+	assert.Nil(t, err)
+
+	req, err := getMessagesRequest(chatId)
+	assert.Nil(t, err)
+	client := &http.Client{}
+
+	// Act
+	res, err := client.Do(req)
+	assert.Nil(t, err)
+	defer res.Body.Close()
+
+	// Assert
+	assert.Equal(t, http.StatusOK, res.StatusCode)
+	body, _ := io.ReadAll(res.Body)
+	var chatMessages []GetChatMessagesResponse
+	err = json.Unmarshal(body, &chatMessages)
+	assert.Equal(t, len(chatMessages), 2)
+	assert.Equal(t, chatMessages[0].Id, message1Id)
+	assert.Equal(t, chatMessages[0].UserId, userId)
+	assert.Equal(t, chatMessages[0].ChatId, chatId)
+	assert.Equal(t, chatMessages[0].Text, text1)
+
+	assert.Equal(t, chatMessages[1].Id, message2Id)
+	assert.Equal(t, chatMessages[1].UserId, userId)
+	assert.Equal(t, chatMessages[1].ChatId, chatId)
+	assert.Equal(t, chatMessages[1].Text, text2)
 }
 
 func TestGetChatMessagesWithNonExistentChatId(t *testing.T) {
